@@ -1,9 +1,9 @@
 {
-    "name": "portfolio-api",
+    "name": "portfolio-rest-api",
     "version": "1.0.0",
     "description": "Global API",
     "main": "index.js",
-    "repository": "https://github.com/g4rf4z/portfolio-api",
+    "repository": "https://github.com/g4rf4z/portfolio-rest-api",
     "author": "g4rf4z <gregoire.pinte@gmail.com>",
     "private": true,
     "scripts": {
