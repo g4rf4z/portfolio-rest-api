@@ -1,0 +1,9 @@
+{
+    "domainUri": "DOMAIN_URI",
+    "dbUri": "DB_URI",
+    "dbName": "DB_NAME",
+    "environment": "NODE_ENV",
+    "publicKey": "PUBLIC_KEY",
+    "privateKey": "PRIVATE_KEY",
+    "port": "PORT"
+}
