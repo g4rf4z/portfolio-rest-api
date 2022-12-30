@@ -8,7 +8,7 @@ import { findUniqueAdmin, updateAdmin } from "../services/admin.service";
 import { CustomError, handleError } from "../utils/errors";
 import { compareData, hashString } from "../utils/hash.utils";
 import { newAccessToken, newRefreshToken } from "../utils/jwt.utils";
-import { sendEmail } from "../utils/emails";
+// import { sendEmail } from "../utils/emails";
 import {
   createResetPasswordToken,
   findResetPasswordToken,
@@ -16,7 +16,7 @@ import {
   updateResetPasswordTokens,
 } from "../services/resetPasswordToken.service";
 import { createSession, updateSessions } from "../services/session.service";
-import { findUniqueUser, updateUser } from "../services/user.service";
+// import { findUniqueUser, updateUser } from "../services/user.service";
 
 import type {
   LoginInput,
@@ -40,31 +40,28 @@ export const loginController = async (
       code: 401,
       message: "invalid_credentials",
     });
-
+    // console.log("a");
     // check if account exist
     try {
       const findOwnerParams = { email: req.body.data.email };
-      switch (req.params.type) {
-        case "user":
-          foundOwner = await findUniqueUser(findOwnerParams);
-          break;
-        case "admin":
-          foundOwner = await findUniqueAdmin(findOwnerParams);
-          break;
-      }
+      foundOwner = await findUniqueAdmin(findOwnerParams);
+      // console.log("b");
     } catch (error) {
+      // console.log("c");
       throw badCredentials;
     }
-
+    // console.log("d");
     // check password match
     const passwordsMatch = await compareData(
       foundOwner.password,
       req.body.data.password
     );
+    // console.log("e");
     if (!passwordsMatch) {
+      // console.log("f");
       throw badCredentials;
     }
-
+    // console.log("g");
     // create a new session
     const accountType = req.params.type === "admin" ? "ADMIN" : "USER";
     const createSessionData: Prisma.SessionCreateInput = {
@@ -74,6 +71,7 @@ export const loginController = async (
         connect: { id: foundOwner.id },
       },
     };
+    // console.log("h");
     const createdSessionOptions = {
       select: {
         id: true,
@@ -86,6 +84,7 @@ export const loginController = async (
       createSessionData,
       createdSessionOptions
     );
+    // console.log("i");
 
     // revoke all active sessions
     updateSessions(
@@ -97,7 +96,7 @@ export const loginController = async (
       },
       { isActive: false }
     );
-
+    // console.log("j");
     // generate tokens
     const tokenData: JwtTokenData = {
       type: accountType,
@@ -112,8 +111,11 @@ export const loginController = async (
         id: createdSession.id,
       },
     };
+    // console.log("k");
     const accessToken = newAccessToken(tokenData);
+    // console.log("l");
     const refreshToken = newRefreshToken(tokenData);
+    // console.log("m");
 
     // set cookies
     res.cookie("accessToken", accessToken, {
@@ -122,13 +124,14 @@ export const loginController = async (
       sameSite: "none",
       secure: true,
     });
+    // console.log("n");
     res.cookie("refreshToken", refreshToken, {
       maxAge: 604800000, // 7 days
       httpOnly: true,
       sameSite: "none",
       secure: true,
     });
-
+    // console.log("o");
     // send session data
     return res.send(createdSession);
   } catch (error) {
@@ -144,6 +147,7 @@ export const logoutController = async (
   try {
     // revoke all active sessions
     const accountType = req.params.type === "admin" ? "ADMIN" : "USER";
+    res.locals = {};
     updateSessions(
       { ownerId: res.locals?.account?.id, isActive: true, type: accountType },
       { isActive: false }
@@ -182,18 +186,10 @@ export const resetPasswordController = async (
 
     // check if account exist
     const foundAccountParams = { email: req.body.data.email };
-    switch (req.params.type) {
-      case "user":
-        foundAccount = await findUniqueUser(foundAccountParams);
-        break;
-      case "admin":
-        foundAccount = await findUniqueAdmin(foundAccountParams);
-        break;
-    }
+    foundAccount = await findUniqueAdmin(foundAccountParams);
 
     // invalidate previous reset password tokens
-    const accountType: AccountType =
-      req.params.type === "admin" ? "ADMIN" : "USER";
+    const accountType: AccountType = "ADMIN";
     await updateResetPasswordTokens(
       { id: foundAccount.id, type: accountType },
       { isValid: false }
@@ -211,12 +207,12 @@ export const resetPasswordController = async (
     await createResetPasswordToken(createTokenData);
 
     // send email
-    await sendEmail({
-      to: foundAccount.email,
-      subject: "Password Reset - Lille Esport",
-      text: "Reset password link",
-      html: `<p>Id: ${foundAccount.id}</p><p>ResetPasswordToken: ${token}</p>`,
-    });
+    // await sendEmail({
+    //   to: foundAccount.email,
+    //   subject: "Password Reset - Lille Esport",
+    //   text: "Reset password link",
+    //   html: `<p>Id: ${foundAccount.id}</p><p>ResetPasswordToken: ${token}</p>`,
+    // });
 
     return res.status(200).send(tokenSent);
   } catch (error) {
@@ -259,20 +255,10 @@ export const setNewPasswordController = async (
     delete req.body.data.passwordConfirmation;
 
     // set new password
-    switch (req.params.type) {
-      case "user":
-        await updateUser(
-          { id: req.params.id },
-          { password: req.body.data.password }
-        );
-        break;
-      case "admin":
-        await updateAdmin(
-          { id: req.params.id },
-          { password: req.body.data.password }
-        );
-        break;
-    }
+    await updateAdmin(
+      { id: req.params.id },
+      { password: req.body.data.password }
+    );
 
     return res.status(200).send({ message: "Successfully updated password" });
   } catch (error) {

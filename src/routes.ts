@@ -34,14 +34,12 @@ import {
 } from "./controllers/admin.controller";
 
 const routes = (app: Express) => {
-  // Healthcheck -------------------------------------------------------
+  // Healthcheck ----------------------------------------------------------------------------------------------------
   app.get("/", (req, res) => {
-    return res.send({ mesage: "Lille Esport API" });
+    return res.send({ message: "Portfolio REST API is working" });
   });
 
-  // Login check -------------------------------------------------------
-
-  // Authentication
+  // Authentication -------------------------------------------------------------------------------------------------
   app.get(
     "/sessions/:type/isLoggedIn",
     [requireAuth()],
@@ -75,7 +73,7 @@ const routes = (app: Express) => {
     setNewPasswordController
   );
 
-  // Admins
+  // Admins ---------------------------------------------------------------------------------------------------------
   app.post(
     "/admins",
     [requireAuth("ADMIN"), validateInputs(createAdminSchema)],

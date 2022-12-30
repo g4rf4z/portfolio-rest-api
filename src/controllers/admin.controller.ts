@@ -55,6 +55,7 @@ export const createAdminController = async (
         isActive: true,
       },
     };
+
     const createdAdmin = await createAdmin(req.body.data, createAdminOptions);
     return res.send(createdAdmin);
   } catch (error) {
