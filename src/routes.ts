@@ -33,6 +33,23 @@ import {
   updateAdminRoleController,
 } from "./controllers/admin.controller";
 
+// SKILL IMPORTS
+import {
+  createSkillSchema,
+  listSkillsSchema,
+  findSkillSchema,
+  updateSkillSchema,
+  deleteSkillSchema,
+} from "./schemas/skill.schema";
+
+import {
+  createSkillController,
+  listSkillsController,
+  findSkillController,
+  updateSkillController,
+  deleteSkillController,
+} from "./controllers/skill.controller";
+
 const routes = (app: Express) => {
   // Healthcheck ----------------------------------------------------------------------------------------------------
   app.get("/", (req, res) => {
@@ -103,6 +120,33 @@ const routes = (app: Express) => {
     "/admins/:id",
     [requireAuth("ADMIN"), validateInputs(deleteAdminSchema)],
     deleteAdminController
+  );
+
+  // Skill ---------------------------------------------------------------------------------------------------------
+  app.post(
+    "/skills",
+    [requireAuth("ADMIN"), validateInputs(createSkillSchema)],
+    createSkillController
+  );
+  app.get(
+    "/skills",
+    [requireAuth("ADMIN"), validateInputs(listSkillsSchema)],
+    listSkillsController
+  );
+  app.get(
+    "/skills/:id",
+    [requireAuth("ADMIN"), validateInputs(findSkillSchema)],
+    findSkillController
+  );
+  app.patch(
+    "/skills/:id/update-role",
+    [requireAuth("ADMIN"), validateInputs(updateSkillSchema)],
+    updateSkillController
+  );
+  app.delete(
+    "/skills/:id",
+    [requireAuth("ADMIN"), validateInputs(deleteSkillSchema)],
+    deleteSkillController
   );
 };
 

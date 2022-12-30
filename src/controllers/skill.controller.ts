@@ -65,9 +65,9 @@ export const listSkillsController = async (
         progress: true,
       },
     };
-    const foundAdmins = await findManySkills(req.body.params, listOptions);
-    if (foundAdmins.length === 0) return res.status(204).send();
-    return res.send(foundAdmins);
+    const foundSkills = await findManySkills(req.body.params, listOptions);
+    if (foundSkills.length === 0) return res.status(204).send();
+    return res.send(foundSkills);
   } catch (error) {
     return handleError(error, res);
   }
@@ -90,29 +90,21 @@ export const findSkillController = async (
         progress: true,
       },
     };
-    const foundAdmin = await findUniqueSkill(req.params, findSkillOptions);
-    return res.send(foundAdmin);
+    const foundSkill = await findUniqueSkill(req.params, findSkillOptions);
+    return res.send(foundSkill);
   } catch (error) {
     return handleError(error, res);
   }
 };
 
 // UPDATE SKILL CONTROLLER
-export const updateAdminRoleController = async (
+export const updateSkillController = async (
   req: Request<UpdateSkillInput["params"], {}, UpdateSkillInput["body"]>,
   res: Response
 ) => {
   if (!checkAdminClearance(res, ["SUPERADMIN", "ADMIN"])) return;
 
   try {
-    // check role, update if needed
-    if (
-      res.locals?.account?.role === "ADMIN" &&
-      ["SUPERADMIN", "ADMIN"].includes(req.body.data.role || "")
-    ) {
-      req.body.data.role = "USER";
-    }
-
     const updateSkillOptions = {
       select: {
         id: true,
@@ -125,12 +117,12 @@ export const updateAdminRoleController = async (
       },
     };
 
-    const updatedAdmin = await updateSkill(
+    const updatedSkill = await updateSkill(
       { id: req.params.id },
       req.body.data,
       updateSkillOptions
     );
-    return res.send(updatedAdmin);
+    return res.send(updatedSkill);
   } catch (error) {
     return handleError(error, res);
   }
