@@ -122,7 +122,7 @@ const routes = (app: Express) => {
     deleteAdminController
   );
 
-  // Skill ---------------------------------------------------------------------------------------------------------
+  // Skills ----------------------------------------------------------------------------------------------------------
   app.post(
     "/skills",
     [requireAuth("ADMIN"), validateInputs(createSkillSchema)],

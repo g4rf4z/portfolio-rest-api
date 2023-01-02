@@ -38,10 +38,7 @@ export const createSkillController = async (
       },
     };
 
-    const createdSkill = await createSkillSchema(
-      req.body.data,
-      createSkillOptions
-    );
+    const createdSkill = await createSkill(req.body.data, createSkillOptions);
     return res.send(createdSkill);
   } catch (error) {
     return handleError(error, res);

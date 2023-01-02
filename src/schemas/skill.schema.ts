@@ -1,5 +1,4 @@
 import { object, string, number, boolean, TypeOf, nativeEnum } from "zod";
-import { validatePasswordComplexity } from "../utils/customValidators";
 
 // CREATE SKILL
 export const createSkillSchema = object({
