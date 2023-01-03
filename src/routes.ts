@@ -128,14 +128,10 @@ const routes = (app: Express) => {
     [requireAuth("ADMIN"), validateInputs(createSkillSchema)],
     createSkillController
   );
-  app.get(
-    "/skills",
-    [requireAuth("ADMIN"), validateInputs(listSkillsSchema)],
-    listSkillsController
-  );
+  app.get("/skills", [validateInputs(listSkillsSchema)], listSkillsController);
   app.get(
     "/skills/:id",
-    [requireAuth("ADMIN"), validateInputs(findSkillSchema)],
+    [validateInputs(findSkillSchema)],
     findSkillController
   );
   app.patch(
