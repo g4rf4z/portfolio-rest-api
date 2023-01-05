@@ -14,7 +14,6 @@ import {
   ListSkillsInput,
   UpdateSkillInput,
   DeleteSkillInput,
-  createSkillSchema,
 } from "../schemas/skill.schema";
 
 // CREATE SKILL CONTROLLER
@@ -25,7 +24,6 @@ export const createSkillController = async (
   if (!checkAdminClearance(res, ["SUPERADMIN", "ADMIN"])) return;
 
   try {
-    // Create a new skill.
     const createSkillOptions = {
       select: {
         id: true,

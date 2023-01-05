@@ -50,13 +50,30 @@ import {
   deleteSkillController,
 } from "./controllers/skill.controller";
 
+// EXPERIENCE IMPORTS
+import {
+  createExperienceSchema,
+  listExperiencesSchema,
+  findExperienceSchema,
+  updateExperienceSchema,
+  deleteExperienceSchema,
+} from "./schemas/experience.schema";
+
+import {
+  createExperienceController,
+  listExperiencesController,
+  findExperienceController,
+  updateExperienceController,
+  deleteExperienceController,
+} from "./controllers/experience.controller";
+
 const routes = (app: Express) => {
   // Healthcheck ----------------------------------------------------------------------------------------------------
   app.get("/", (req, res) => {
     return res.send({ message: "Portfolio REST API is working" });
   });
 
-  // Authentication -------------------------------------------------------------------------------------------------
+  // Sessions -------------------------------------------------------------------------------------------------
   app.get(
     "/sessions/:type/isLoggedIn",
     [requireAuth()],
@@ -143,6 +160,33 @@ const routes = (app: Express) => {
     "/skills/:id",
     [requireAuth("ADMIN"), validateInputs(deleteSkillSchema)],
     deleteSkillController
+  );
+
+  // Experiences ------------------------------------------------------------------------------------------------------
+  app.post(
+    "/experiences",
+    [requireAuth("ADMIN"), validateInputs(createExperienceSchema)],
+    createExperienceController
+  );
+  app.get(
+    "/experiences",
+    [validateInputs(listExperiencesSchema)],
+    listExperiencesController
+  );
+  app.get(
+    "/experiences/:id",
+    [validateInputs(findExperienceSchema)],
+    findExperienceController
+  );
+  app.patch(
+    "/experiences/:id/update-role",
+    [requireAuth("ADMIN"), validateInputs(updateExperienceSchema)],
+    updateExperienceController
+  );
+  app.delete(
+    "/experiences/:id",
+    [requireAuth("ADMIN"), validateInputs(deleteExperienceSchema)],
+    deleteExperienceController
   );
 };
 

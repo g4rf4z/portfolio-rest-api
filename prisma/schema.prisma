@@ -112,8 +112,8 @@ model Experience {
   company  String
   city     String
   country  String
-  from     DateTime
-  to       DateTime
+  from     String
+  to       String
   tasks    String
 
   @@map("experiences")
