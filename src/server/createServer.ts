@@ -13,7 +13,7 @@ const createServer = () => {
   app.use(
     cors({
       credentials: true,
-      origin: ["http://localhost:3000"],
+      origin: ["http://127.0.0.1:5173", "http://localhost:3000"],
       methods: ["GET", "POST", "PATCH", "DELETE"],
     })
   );
