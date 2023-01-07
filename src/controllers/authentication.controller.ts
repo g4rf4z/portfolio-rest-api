@@ -40,28 +40,23 @@ export const loginController = async (
       code: 401,
       message: "invalid_credentials",
     });
-    // console.log("a");
+
     // check if account exist
     try {
       const findOwnerParams = { email: req.body.data.email };
       foundOwner = await findUniqueAdmin(findOwnerParams);
-      // console.log("b");
     } catch (error) {
-      // console.log("c");
       throw badCredentials;
     }
-    // console.log("d");
+
     // check password match
-    const passwordsMatch = await compareData(
-      foundOwner.password,
-      req.body.data.password
-    );
-    // console.log("e");
+    const passwordsMatch = await compareData(foundOwner.password, req.body.data.password);
+
     if (!passwordsMatch) {
       // console.log("f");
       throw badCredentials;
     }
-    // console.log("g");
+
     // create a new session
     const accountType = req.params.type === "admin" ? "ADMIN" : "USER";
     const createSessionData: Prisma.SessionCreateInput = {
@@ -71,20 +66,17 @@ export const loginController = async (
         connect: { id: foundOwner.id },
       },
     };
-    // console.log("h");
+
     const createdSessionOptions = {
       select: {
         id: true,
         createdAt: true,
         isActive: true,
         userAgent: true,
+        admin: true,
       },
     };
-    const createdSession = await createSession(
-      createSessionData,
-      createdSessionOptions
-    );
-    // console.log("i");
+    const createdSession = await createSession(createSessionData, createdSessionOptions);
 
     // revoke all active sessions
     updateSessions(
@@ -96,7 +88,7 @@ export const loginController = async (
       },
       { isActive: false }
     );
-    // console.log("j");
+
     // generate tokens
     const tokenData: JwtTokenData = {
       type: accountType,
@@ -111,11 +103,9 @@ export const loginController = async (
         id: createdSession.id,
       },
     };
-    // console.log("k");
+
     const accessToken = newAccessToken(tokenData);
-    // console.log("l");
     const refreshToken = newRefreshToken(tokenData);
-    // console.log("m");
 
     // set cookies
     res.cookie("accessToken", accessToken, {
@@ -124,15 +114,16 @@ export const loginController = async (
       sameSite: "none",
       secure: true,
     });
-    // console.log("n");
+
     res.cookie("refreshToken", refreshToken, {
       maxAge: 604800000, // 7 days
       httpOnly: true,
       sameSite: "none",
       secure: true,
     });
-    // console.log("o");
+
     // send session data
+    delete (createdSession as any)?.admin?.password;
     return res.send(createdSession);
   } catch (error) {
     handleError(error, res);
@@ -190,10 +181,7 @@ export const resetPasswordController = async (
 
     // invalidate previous reset password tokens
     const accountType: AccountType = "ADMIN";
-    await updateResetPasswordTokens(
-      { id: foundAccount.id, type: accountType },
-      { isValid: false }
-    );
+    await updateResetPasswordTokens({ id: foundAccount.id, type: accountType }, { isValid: false });
 
     // generate reset password token and save it
     let token = crypto.randomBytes(32).toString("hex");
@@ -255,10 +243,7 @@ export const setNewPasswordController = async (
     delete req.body.data.passwordConfirmation;
 
     // set new password
-    await updateAdmin(
-      { id: req.params.id },
-      { password: req.body.data.password }
-    );
+    await updateAdmin({ id: req.params.id }, { password: req.body.data.password });
 
     return res.status(200).send({ message: "Successfully updated password" });
   } catch (error) {
