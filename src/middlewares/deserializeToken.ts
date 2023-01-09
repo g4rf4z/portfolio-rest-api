@@ -1,11 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { verifyJwt, reIssueAccessToken } from "../utils/jwt.utils";
 
-const deserializeToken = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const deserializeToken = async (req: Request, res: Response, next: NextFunction) => {
   const { accessToken, refreshToken } = req.cookies;
 
   if (!accessToken && !refreshToken) return next();

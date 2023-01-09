@@ -12,8 +12,8 @@ export type JwtTokenData = {
   type: AccountType;
   account: {
     id: string;
-    firstname: string;
     lastname: string;
+    firstname: string;
     email: string;
     role: AdminRole;
   };
@@ -25,10 +25,7 @@ export type JwtTokenData = {
 export type AdminSession = Session & { admin: Admin };
 export type UserSession = Session & { user: User };
 
-export const signJwt = (
-  object: Object,
-  options?: jwt.SignOptions | undefined
-) => {
+export const signJwt = (object: Object, options?: jwt.SignOptions | undefined) => {
   return jwt.sign(object, privateKey, {
     ...(options && options),
     algorithm: "RS256",
@@ -52,11 +49,7 @@ export const verifyJwt = (token: string) => {
   }
 };
 
-export const reIssueAccessToken = async ({
-  refreshToken,
-}: {
-  refreshToken: string;
-}) => {
+export const reIssueAccessToken = async ({ refreshToken }: { refreshToken: string }) => {
   const { decoded } = verifyJwt(refreshToken) as any;
   if (!decoded || !decoded["sessionId"]) return false;
 

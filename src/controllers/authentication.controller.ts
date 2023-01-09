@@ -1,9 +1,5 @@
 import crypto from "crypto";
-import {
-  NotFoundError,
-  PrismaClientKnownRequestError,
-  PrismaClientUnknownRequestError,
-} from "@prisma/client/runtime";
+import { NotFoundError, PrismaClientKnownRequestError, PrismaClientUnknownRequestError } from "@prisma/client/runtime";
 import { findUniqueAdmin, updateAdmin } from "../services/admin.service";
 import { CustomError, handleError } from "../utils/errors";
 import { compareData, hashString } from "../utils/hash.utils";
@@ -18,21 +14,13 @@ import {
 import { createSession, updateSessions } from "../services/session.service";
 // import { findUniqueUser, updateUser } from "../services/user.service";
 
-import type {
-  LoginInput,
-  LogoutInput,
-  ResetPasswordInput,
-  SetPasswordInput,
-} from "../schemas/authentication.schema";
+import type { LoginInput, LogoutInput, ResetPasswordInput, SetPasswordInput } from "../schemas/authentication.schema";
 import type { JwtTokenData } from "../utils/jwt.utils";
 import type { Request, Response } from "express";
 import type { AccountType, Prisma } from "@prisma/client";
 
 // LOGIN CONTROLLER
-export const loginController = async (
-  req: Request<LoginInput["params"], {}, LoginInput["body"]>,
-  res: Response
-) => {
+export const loginController = async (req: Request<LoginInput["params"], {}, LoginInput["body"]>, res: Response) => {
   try {
     let foundOwner;
     let badCredentials = new CustomError({
@@ -53,7 +41,6 @@ export const loginController = async (
     const passwordsMatch = await compareData(foundOwner.password, req.body.data.password);
 
     if (!passwordsMatch) {
-      // console.log("f");
       throw badCredentials;
     }
 
@@ -71,7 +58,7 @@ export const loginController = async (
       select: {
         id: true,
         createdAt: true,
-        isActive: true,
+        updatedAt: true,
         userAgent: true,
         admin: true,
       },
@@ -131,18 +118,12 @@ export const loginController = async (
 };
 
 // LOGOUT CONTROLLER
-export const logoutController = async (
-  req: Request<LogoutInput["params"], {}, {}>,
-  res: Response
-) => {
+export const logoutController = async (req: Request<LogoutInput["params"], {}, {}>, res: Response) => {
   try {
     // revoke all active sessions
     const accountType = req.params.type === "admin" ? "ADMIN" : "USER";
     res.locals = {};
-    updateSessions(
-      { ownerId: res.locals?.account?.id, isActive: true, type: accountType },
-      { isActive: false }
-    );
+    updateSessions({ ownerId: res.locals?.account?.id, isActive: true, type: accountType }, { isActive: false });
 
     // send new token to overwrite the previous one
     res.cookie("accessToken", "", {
