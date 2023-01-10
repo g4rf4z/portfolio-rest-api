@@ -2,7 +2,13 @@ import { AdminRole } from "@prisma/client";
 import { handleError } from "../utils/errors";
 import { hashString } from "../utils/hash.utils";
 import { checkAdminClearance } from "../utils/checkPermissions";
-import { createAdmin, deleteAdmin, findManyAdmins, findUniqueAdmin, updateAdmin } from "../services/admin.service";
+import {
+  createAdmin,
+  deleteAdmin,
+  findManyAdmins,
+  findUniqueAdmin,
+  updateAdmin,
+} from "../services/admin.service";
 
 import type { Request, Response } from "express";
 import type {
@@ -18,12 +24,18 @@ import type {
 } from "../schemas/admin.schema";
 
 // ADMIN CREATE CONTROLLER
-export const createAdminController = async (req: Request<{}, {}, CreateAdminInput["body"]>, res: Response) => {
+export const createAdminController = async (
+  req: Request<{}, {}, CreateAdminInput["body"]>,
+  res: Response
+) => {
   if (!checkAdminClearance(res, ["SUPERADMIN", "ADMIN"])) return;
 
   try {
     // check role, update if needed
-    if (res.locals?.account?.role === "ADMIN" && ["SUPERADMIN", "ADMIN"].includes(req.body.data.role || "")) {
+    if (
+      res.locals?.account?.role === "ADMIN" &&
+      ["SUPERADMIN", "ADMIN"].includes(req.body.data.role || "")
+    ) {
       req.body.data.role = "USER";
     }
 
@@ -52,7 +64,10 @@ export const createAdminController = async (req: Request<{}, {}, CreateAdminInpu
 };
 
 // ADMIN LIST CONTROLLER
-export const listAdminsController = async (req: Request<{}, {}, ListAdminsInput["body"]>, res: Response) => {
+export const listAdminsController = async (
+  req: Request<{}, {}, ListAdminsInput["body"]>,
+  res: Response
+) => {
   try {
     const listAdminsOptions = {
       select: {
@@ -66,7 +81,10 @@ export const listAdminsController = async (req: Request<{}, {}, ListAdminsInput[
         isActive: true,
       },
     };
-    const foundAdmins = await findManyAdmins(req.body.params, listAdminsOptions);
+    const foundAdmins = await findManyAdmins(
+      req.body.params,
+      listAdminsOptions
+    );
     if (foundAdmins.length === 0) return res.status(204).send();
     return res.send(foundAdmins);
   } catch (error) {
@@ -75,7 +93,10 @@ export const listAdminsController = async (req: Request<{}, {}, ListAdminsInput[
 };
 
 // ADMIN FIND CONTROLLER
-export const findAdminController = async (req: Request<FindAdminInput["params"], {}, {}>, res: Response) => {
+export const findAdminController = async (
+  req: Request<FindAdminInput["params"], {}, {}>,
+  res: Response
+) => {
   try {
     const findAdminOptions = {
       select: {
@@ -98,14 +119,21 @@ export const findAdminController = async (req: Request<FindAdminInput["params"],
 
 // ADMIN UPDATE ROLE CONTROLLER
 export const updateAdminRoleController = async (
-  req: Request<UpdateAdminRoleInput["params"], {}, UpdateAdminRoleInput["body"]>,
+  req: Request<
+    UpdateAdminRoleInput["params"],
+    {},
+    UpdateAdminRoleInput["body"]
+  >,
   res: Response
 ) => {
   if (!checkAdminClearance(res, ["SUPERADMIN", "ADMIN"])) return;
 
   try {
     // check role, update if needed
-    if (res.locals?.account?.role === "ADMIN" && ["SUPERADMIN", "ADMIN"].includes(req.body.data.role || "")) {
+    if (
+      res.locals?.account?.role === "ADMIN" &&
+      ["SUPERADMIN", "ADMIN"].includes(req.body.data.role || "")
+    ) {
       req.body.data.role = "USER";
     }
 
@@ -121,7 +149,11 @@ export const updateAdminRoleController = async (
         isActive: true,
       },
     };
-    const updatedAdmin = await updateAdmin({ id: req.params.id }, req.body.data, updateAdminOptions);
+    const updatedAdmin = await updateAdmin(
+      { id: req.params.id },
+      req.body.data,
+      updateAdminOptions
+    );
     return res.send(updatedAdmin);
   } catch (error) {
     return handleError(error, res);
@@ -129,7 +161,10 @@ export const updateAdminRoleController = async (
 };
 
 // DISABLE ADMIN CONTROLLER
-export const disableAdminController = async (req: Request<DisableAdminInput["params"], {}, {}>, res: Response) => {
+export const disableAdminController = async (
+  req: Request<DisableAdminInput["params"], {}, {}>,
+  res: Response
+) => {
   try {
     if (!checkAdminClearance(res, ["SUPERADMIN", "ADMIN"])) return;
 
@@ -154,7 +189,11 @@ export const disableAdminController = async (req: Request<DisableAdminInput["par
       }
     }
 
-    const updatedAdmin = await updateAdmin({ id: req.params.id }, { isActive: false }, updateAdminOptions);
+    const updatedAdmin = await updateAdmin(
+      { id: req.params.id },
+      { isActive: false },
+      updateAdminOptions
+    );
 
     return res.send(updatedAdmin);
   } catch (error) {
@@ -163,7 +202,10 @@ export const disableAdminController = async (req: Request<DisableAdminInput["par
 };
 
 // DELETE ADMIN CONTROLLER
-export const deleteAdminController = async (req: Request<DeleteAdminInput["params"], {}, {}>, res: Response) => {
+export const deleteAdminController = async (
+  req: Request<DeleteAdminInput["params"], {}, {}>,
+  res: Response
+) => {
   try {
     if (!checkAdminClearance(res, ["SUPERADMIN", "ADMIN"])) return;
 
@@ -188,7 +230,10 @@ export const deleteAdminController = async (req: Request<DeleteAdminInput["param
       }
     }
 
-    const deletedAdmin = await deleteAdmin({ id: req.params.id }, deleteAdminOptions);
+    const deletedAdmin = await deleteAdmin(
+      { id: req.params.id },
+      deleteAdminOptions
+    );
 
     return res.send(deletedAdmin);
   } catch (error) {
@@ -197,7 +242,10 @@ export const deleteAdminController = async (req: Request<DeleteAdminInput["param
 };
 
 // CURRENT ADMIN UPDATE CONTROLLER
-export const updateCurrentAdminController = async (req: Request<{}, {}, UpdateCurrentAdminInput["body"]>, res: Response) => {
+export const updateCurrentAdminController = async (
+  req: Request<{}, {}, UpdateCurrentAdminInput["body"]>,
+  res: Response
+) => {
   try {
     const updateAdminOptions = {
       select: {
@@ -211,7 +259,11 @@ export const updateCurrentAdminController = async (req: Request<{}, {}, UpdateCu
         isActive: true,
       },
     };
-    const updatedAdmin = await updateAdmin({ id: res.locals.account.id }, req.body.data, updateAdminOptions);
+    const updatedAdmin = await updateAdmin(
+      { id: res.locals.account.id },
+      req.body.data,
+      updateAdminOptions
+    );
     return res.send(updatedAdmin);
   } catch (error) {
     return handleError(error, res);
@@ -236,7 +288,11 @@ export const updateCurrentAdminEmailController = async (
         isActive: true,
       },
     };
-    const updatedAdmin = await updateAdmin({ id: res.locals.account.id }, req.body.data, updateAdminOptions);
+    const updatedAdmin = await updateAdmin(
+      { id: res.locals.account.id },
+      req.body.data,
+      updateAdminOptions
+    );
     return res.send(updatedAdmin);
   } catch (error) {
     return handleError(error, res);
@@ -252,7 +308,10 @@ export const updateCurrentAdminPasswordController = async (
     // password hash
     req.body.data.newPassword = await hashString(req.body.data.newPassword);
 
-    await updateAdmin({ id: res.locals.account.id }, { password: req.body.data.newPassword });
+    await updateAdmin(
+      { id: res.locals.account.id },
+      { password: req.body.data.newPassword }
+    );
 
     return res.status(204).send();
   } catch (error) {

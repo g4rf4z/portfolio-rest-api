@@ -1,8 +1,8 @@
-import type { Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { prisma } from "../utils/prisma";
 import { handlePrismaError } from "../utils/errors";
 
-// CREATE SESSION
+// ------------------------- CREATE SESSION -------------------------
 export const createSession = async (
   data: Prisma.SessionCreateArgs["data"],
   options: Omit<Prisma.SessionCreateArgs, "data"> = {}
@@ -14,7 +14,7 @@ export const createSession = async (
   }
 };
 
-// FIND SESSION
+// ------------------------- FIND SESSION -------------------------
 export const findSession = async (
   params: Prisma.SessionFindUniqueOrThrowArgs["where"],
   options: Omit<Prisma.SessionFindUniqueOrThrowArgs, "where"> = {}
@@ -26,19 +26,7 @@ export const findSession = async (
   }
 };
 
-// UPDATE MANY SESSIONS
-export const updateSessions = async (
-  params: Prisma.SessionUpdateManyArgs["where"],
-  data: Prisma.SessionUpdateManyArgs["data"]
-) => {
-  try {
-    return await prisma.session.updateMany({ where: params, data });
-  } catch (error) {
-    throw handlePrismaError(error, "session");
-  }
-};
-
-// UPDATE SESSION
+// ------------------------- UPDATE SESSION -------------------------
 export const updateSession = async (
   params: Prisma.SessionUpdateArgs["where"],
   data: Prisma.SessionUpdateArgs["data"],
@@ -50,6 +38,18 @@ export const updateSession = async (
       data,
       ...options,
     });
+  } catch (error) {
+    throw handlePrismaError(error, "session");
+  }
+};
+
+// ------------------------- UPDATE SESSIONS -------------------------
+export const updateSessions = async (
+  params: Prisma.SessionUpdateManyArgs["where"],
+  data: Prisma.SessionUpdateManyArgs["data"]
+) => {
+  try {
+    return await prisma.session.updateMany({ where: params, data });
   } catch (error) {
     throw handlePrismaError(error, "session");
   }

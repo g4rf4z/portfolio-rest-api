@@ -1,5 +1,8 @@
 import crypto from "crypto";
-import { NotFoundError, PrismaClientKnownRequestError, PrismaClientUnknownRequestError } from "@prisma/client/runtime";
+import {
+  PrismaClientKnownRequestError,
+  PrismaClientUnknownRequestError,
+} from "@prisma/client/runtime";
 import { findUniqueAdmin, updateAdmin } from "../services/admin.service";
 import { CustomError, handleError } from "../utils/errors";
 import { compareData, hashString } from "../utils/hash.utils";
@@ -14,13 +17,21 @@ import {
 import { createSession, updateSessions } from "../services/session.service";
 // import { findUniqueUser, updateUser } from "../services/user.service";
 
-import type { LoginInput, LogoutInput, ResetPasswordInput, SetPasswordInput } from "../schemas/authentication.schema";
+import type {
+  LoginInput,
+  LogoutInput,
+  ResetPasswordInput,
+  SetPasswordInput,
+} from "../schemas/authentication.schema";
 import type { JwtTokenData } from "../utils/jwt.utils";
 import type { Request, Response } from "express";
 import type { AccountType, Prisma } from "@prisma/client";
 
-// LOGIN CONTROLLER
-export const loginController = async (req: Request<LoginInput["params"], {}, LoginInput["body"]>, res: Response) => {
+// ------------------------- LOGIN CONTROLLER -------------------------
+export const loginController = async (
+  req: Request<LoginInput["params"], {}, LoginInput["body"]>,
+  res: Response
+) => {
   try {
     let foundOwner;
     let badCredentials = new CustomError({
@@ -38,7 +49,10 @@ export const loginController = async (req: Request<LoginInput["params"], {}, Log
     }
 
     // check password match
-    const passwordsMatch = await compareData(foundOwner.password, req.body.data.password);
+    const passwordsMatch = await compareData(
+      foundOwner.password,
+      req.body.data.password
+    );
 
     if (!passwordsMatch) {
       throw badCredentials;
@@ -63,7 +77,10 @@ export const loginController = async (req: Request<LoginInput["params"], {}, Log
         admin: true,
       },
     };
-    const createdSession = await createSession(createSessionData, createdSessionOptions);
+    const createdSession = await createSession(
+      createSessionData,
+      createdSessionOptions
+    );
 
     // revoke all active sessions
     updateSessions(
@@ -117,13 +134,19 @@ export const loginController = async (req: Request<LoginInput["params"], {}, Log
   }
 };
 
-// LOGOUT CONTROLLER
-export const logoutController = async (req: Request<LogoutInput["params"], {}, {}>, res: Response) => {
+// ------------------------- LOGOUT CONTROLLER -------------------------
+export const logoutController = async (
+  req: Request<LogoutInput["params"], {}, {}>,
+  res: Response
+) => {
   try {
     // revoke all active sessions
     const accountType = req.params.type === "admin" ? "ADMIN" : "USER";
     res.locals = {};
-    updateSessions({ ownerId: res.locals?.account?.id, isActive: true, type: accountType }, { isActive: false });
+    updateSessions(
+      { ownerId: res.locals?.account?.id, isActive: true, type: accountType },
+      { isActive: false }
+    );
 
     // send new token to overwrite the previous one
     res.cookie("accessToken", "", {
@@ -145,7 +168,7 @@ export const logoutController = async (req: Request<LogoutInput["params"], {}, {
   }
 };
 
-// RESET PASSWORD
+// ------------------------- RESET PASSWORD -------------------------
 export const resetPasswordController = async (
   req: Request<ResetPasswordInput["params"], {}, ResetPasswordInput["body"]>,
   res: Response
@@ -162,7 +185,10 @@ export const resetPasswordController = async (
 
     // invalidate previous reset password tokens
     const accountType: AccountType = "ADMIN";
-    await updateResetPasswordTokens({ id: foundAccount.id, type: accountType }, { isValid: false });
+    await updateResetPasswordTokens(
+      { id: foundAccount.id, type: accountType },
+      { isValid: false }
+    );
 
     // generate reset password token and save it
     let token = crypto.randomBytes(32).toString("hex");
@@ -192,7 +218,7 @@ export const resetPasswordController = async (
   }
 };
 
-// SET NEW PASSWORD
+// ------------------------- SET PASSWORD -------------------------
 export const setNewPasswordController = async (
   req: Request<SetPasswordInput["params"], {}, SetPasswordInput["body"]>,
   res: Response
@@ -224,7 +250,10 @@ export const setNewPasswordController = async (
     delete req.body.data.passwordConfirmation;
 
     // set new password
-    await updateAdmin({ id: req.params.id }, { password: req.body.data.password });
+    await updateAdmin(
+      { id: req.params.id },
+      { password: req.body.data.password }
+    );
 
     return res.status(200).send({ message: "Successfully updated password" });
   } catch (error) {

@@ -3,6 +3,7 @@ import { validatePasswordComplexity } from "../utils/customValidators";
 
 const TYPE_VALUES = ["admin", "user"] as const;
 
+// ------------------------- LOGIN -------------------------
 export const loginSchema = object({
   params: object({
     type: zodEnum(TYPE_VALUES),
@@ -15,12 +16,14 @@ export const loginSchema = object({
   }).strict(),
 });
 
+// ------------------------- LOGOUT -------------------------
 export const logoutSchema = object({
   params: object({
     type: zodEnum(TYPE_VALUES),
   }).strict(),
 });
 
+// ------------------------- RESET PASSWORD -------------------------
 export const resetPasswordSchema = object({
   params: object({
     type: zodEnum(TYPE_VALUES),
@@ -32,6 +35,7 @@ export const resetPasswordSchema = object({
   }).strict(),
 });
 
+// ------------------------- SET PASSWORD -------------------------
 export const setPasswordSchema = object({
   params: object({
     type: zodEnum(TYPE_VALUES),
@@ -49,6 +53,7 @@ export const setPasswordSchema = object({
   }).strict(),
 });
 
+// ------------------------- EXPORTS -------------------------
 export type LoginInput = TypeOf<typeof loginSchema>;
 export type LogoutInput = TypeOf<typeof logoutSchema>;
 export type ResetPasswordInput = TypeOf<typeof resetPasswordSchema>;

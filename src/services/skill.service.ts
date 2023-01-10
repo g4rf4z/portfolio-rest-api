@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "../utils/prisma";
-import { CustomError, handlePrismaError } from "../utils/errors";
+import { handlePrismaError } from "../utils/errors";
 
 // CREATE SKILL
 export const createSkill = async (
