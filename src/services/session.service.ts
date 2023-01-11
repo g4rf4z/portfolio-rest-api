@@ -14,7 +14,7 @@ export const createSession = async (
   }
 };
 
-// ------------------------- FIND SESSION -------------------------
+// ------------------------- READ SESSION -------------------------
 export const findSession = async (
   params: Prisma.SessionFindUniqueOrThrowArgs["where"],
   options: Omit<Prisma.SessionFindUniqueOrThrowArgs, "where"> = {}
@@ -33,11 +33,7 @@ export const updateSession = async (
   options: Omit<Prisma.SessionUpdateArgs, "where" | "data">
 ) => {
   try {
-    return await prisma.session.update({
-      where: params,
-      data,
-      ...options,
-    });
+    return await prisma.session.update({ where: params, data, ...options });
   } catch (error) {
     throw handlePrismaError(error, "session");
   }
@@ -50,6 +46,18 @@ export const updateSessions = async (
 ) => {
   try {
     return await prisma.session.updateMany({ where: params, data });
+  } catch (error) {
+    throw handlePrismaError(error, "session");
+  }
+};
+
+// ------------------------- DELETE SESSION -------------------------
+export const deleteSession = async (
+  params: Prisma.SessionDeleteArgs["where"],
+  options: Omit<Prisma.SessionDeleteArgs, "where">
+) => {
+  try {
+    return await prisma.session.delete({ where: params, ...options });
   } catch (error) {
     throw handlePrismaError(error, "session");
   }

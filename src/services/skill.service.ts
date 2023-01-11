@@ -2,7 +2,7 @@ import { Prisma } from "@prisma/client";
 import { prisma } from "../utils/prisma";
 import { handlePrismaError } from "../utils/errors";
 
-// CREATE SKILL
+// ------------------------- CREATE SKILL -------------------------
 export const createSkill = async (
   data: Prisma.SkillCreateArgs["data"],
   options: Omit<Prisma.SkillCreateArgs, "data"> = {}
@@ -14,19 +14,7 @@ export const createSkill = async (
   }
 };
 
-// FIND ADMINS
-export const findManySkills = async (
-  params: Prisma.SkillFindManyArgs["where"],
-  options: Omit<Prisma.SkillFindManyArgs, "where"> = {}
-) => {
-  try {
-    return await prisma.skill.findMany({ where: params, ...options });
-  } catch (error) {
-    throw handlePrismaError(error, "skill");
-  }
-};
-
-// FIND ADMIN
+// ------------------------- READ SKILL -------------------------
 export const findUniqueSkill = async (
   params: Prisma.SkillFindUniqueOrThrowArgs["where"],
   options: Omit<Prisma.SkillFindUniqueOrThrowArgs, "where"> = {}
@@ -38,7 +26,19 @@ export const findUniqueSkill = async (
   }
 };
 
-// UPDATE ADMIN
+// ------------------------- READ SKILLS -------------------------
+export const findManySkills = async (
+  params: Prisma.SkillFindManyArgs["where"],
+  options: Omit<Prisma.SkillFindManyArgs, "where"> = {}
+) => {
+  try {
+    return await prisma.skill.findMany({ where: params, ...options });
+  } catch (error) {
+    throw handlePrismaError(error, "skill");
+  }
+};
+
+// ------------------------- UPDATE SKILL -------------------------
 export const updateSkill = async (
   params: Prisma.SkillUpdateArgs["where"],
   data: Prisma.SkillUpdateArgs["data"],
@@ -55,7 +55,7 @@ export const updateSkill = async (
   }
 };
 
-// DELETE ADMIN
+// ------------------------- DELETE SKILL -------------------------
 export const deleteSkill = async (
   params: Prisma.SkillDeleteArgs["where"],
   options: Omit<Prisma.SkillDeleteArgs, "where">

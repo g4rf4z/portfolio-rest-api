@@ -1,12 +1,6 @@
 import { handleError } from "../utils/errors";
 import { checkAdminClearance } from "../utils/checkPermissions";
-import {
-  createSkill,
-  findManySkills,
-  findUniqueSkill,
-  updateSkill,
-  deleteSkill,
-} from "../services/skill.service";
+import { createSkill, findManySkills, findUniqueSkill, updateSkill, deleteSkill } from "../services/skill.service";
 import type { Request, Response } from "express";
 import {
   CreateSkillInput,
@@ -17,10 +11,7 @@ import {
 } from "../schemas/skill.schema";
 
 // CREATE SKILL CONTROLLER
-export const createSkillController = async (
-  req: Request<{}, {}, CreateSkillInput["body"]>,
-  res: Response
-) => {
+export const createSkillController = async (req: Request<{}, {}, CreateSkillInput["body"]>, res: Response) => {
   if (!checkAdminClearance(res, ["SUPERADMIN", "ADMIN"])) return;
 
   try {
@@ -44,10 +35,7 @@ export const createSkillController = async (
 };
 
 // SKILL LIST CONTROLLER
-export const listSkillsController = async (
-  req: Request<{}, {}, ListSkillsInput["body"]>,
-  res: Response
-) => {
+export const listSkillsController = async (req: Request<{}, {}, ListSkillsInput["body"]>, res: Response) => {
   try {
     const listOptions = {
       select: {
@@ -69,10 +57,7 @@ export const listSkillsController = async (
 };
 
 // FIND SKILL CONTROLLER
-export const findSkillController = async (
-  req: Request<FindSkillInput["params"], {}, {}>,
-  res: Response
-) => {
+export const findSkillController = async (req: Request<FindSkillInput["params"], {}, {}>, res: Response) => {
   try {
     const findSkillOptions = {
       select: {
@@ -112,22 +97,15 @@ export const updateSkillController = async (
       },
     };
 
-    const updatedSkill = await updateSkill(
-      { id: req.params.id },
-      req.body.data,
-      updateSkillOptions
-    );
+    const updatedSkill = await updateSkill({ id: req.params.id }, req.body.data, updateSkillOptions);
     return res.send(updatedSkill);
   } catch (error) {
     return handleError(error, res);
   }
 };
 
-// DELETE ADMIN CONTROLLER
-export const deleteSkillController = async (
-  req: Request<DeleteSkillInput["params"], {}, {}>,
-  res: Response
-) => {
+// DELETE SKILL CONTROLLER
+export const deleteSkillController = async (req: Request<DeleteSkillInput["params"], {}, {}>, res: Response) => {
   try {
     if (!checkAdminClearance(res, ["SUPERADMIN", "ADMIN"])) return;
 
@@ -143,10 +121,7 @@ export const deleteSkillController = async (
       },
     };
 
-    const deletedSkill = await deleteSkill(
-      { id: req.params.id },
-      deleteSkillOptions
-    );
+    const deletedSkill = await deleteSkill({ id: req.params.id }, deleteSkillOptions);
 
     return res.send(deletedSkill);
   } catch (error) {

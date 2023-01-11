@@ -53,8 +53,16 @@ export const setPasswordSchema = object({
   }).strict(),
 });
 
+// ------------------------- DELETE SESSION -------------------------
+export const deleteSessionSchema = object({
+  params: object({
+    id: string(),
+  }).strict(),
+});
+
 // ------------------------- EXPORTS -------------------------
 export type LoginInput = TypeOf<typeof loginSchema>;
 export type LogoutInput = TypeOf<typeof logoutSchema>;
 export type ResetPasswordInput = TypeOf<typeof resetPasswordSchema>;
 export type SetPasswordInput = TypeOf<typeof setPasswordSchema>;
+export type DeleteSessionInput = TypeOf<typeof deleteSessionSchema>;
