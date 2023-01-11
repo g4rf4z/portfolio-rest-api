@@ -11,11 +11,12 @@ import {
   updateResetPasswordToken,
   updateResetPasswordTokens,
 } from "../services/resetPasswordToken.service";
-import { createSession, deleteSession, updateSessions } from "../services/session.service";
+import { createSession, deleteSession, deleteSessions, updateSessions } from "../services/session.service";
 // import { findUniqueUser, updateUser } from "../services/user.service";
 
 import type {
   DeleteSessionInput,
+  DeleteSessionsInput,
   LoginInput,
   LogoutInput,
   ResetPasswordInput,
@@ -239,7 +240,7 @@ export const setNewPasswordController = async (
   }
 };
 
-// ------------------------- DELETE SESSION -------------------------
+// ------------------------- DELETE SESSION CONTROLLER -------------------------
 export const deleteSessionController = async (req: Request<DeleteSessionInput["params"], {}, {}>, res: Response) => {
   try {
     if (!checkAdminClearance(res, ["SUPERADMIN", "ADMIN"])) return;
@@ -260,6 +261,23 @@ export const deleteSessionController = async (req: Request<DeleteSessionInput["p
     const deletedSession = await deleteSession({ id: req.params.id }, deleteSessionOptions);
 
     return res.send(deletedSession);
+  } catch (error) {
+    return handleError(error, res);
+  }
+};
+
+// ------------------------- DELETE SESSIONS CONTROLLER -------------------------
+export const deleteSessionsController = async (req: Request<DeleteSessionsInput["params"], {}, {}>, res: Response) => {
+  try {
+    if (!checkAdminClearance(res, ["SUPERADMIN", "ADMIN"])) return;
+
+    const deleteSessionsOptions = {
+      where: { isActive: false },
+    };
+
+    const deletedSessions = await deleteSessions({ isActive: req.params.isActive });
+
+    return res.send(deletedSessions);
   } catch (error) {
     return handleError(error, res);
   }

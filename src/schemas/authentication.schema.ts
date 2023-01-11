@@ -1,9 +1,9 @@
-import { object, string, TypeOf, enum as zodEnum } from "zod";
+import { object, string, boolean, TypeOf, enum as zodEnum } from "zod";
 import { validatePasswordComplexity } from "../utils/customValidators";
 
 const TYPE_VALUES = ["admin", "user"] as const;
 
-// ------------------------- LOGIN -------------------------
+// ------------------------- LOGIN SCHEMA -------------------------
 export const loginSchema = object({
   params: object({
     type: zodEnum(TYPE_VALUES),
@@ -16,7 +16,7 @@ export const loginSchema = object({
   }).strict(),
 });
 
-// ------------------------- LOGOUT -------------------------
+// ------------------------- LOGOUT SCHEMA -------------------------
 export const logoutSchema = object({
   params: object({
     type: zodEnum(TYPE_VALUES),
@@ -53,10 +53,17 @@ export const setPasswordSchema = object({
   }).strict(),
 });
 
-// ------------------------- DELETE SESSION -------------------------
+// ------------------------- DELETE SESSION SCHEMA -------------------------
 export const deleteSessionSchema = object({
   params: object({
     id: string(),
+  }).strict(),
+});
+
+// ------------------------- DELETE SESSIONS SCHEMA -------------------------
+export const deleteSessionsSchema = object({
+  params: object({
+    isActive: boolean().optional(),
   }).strict(),
 });
 
@@ -66,3 +73,4 @@ export type LogoutInput = TypeOf<typeof logoutSchema>;
 export type ResetPasswordInput = TypeOf<typeof resetPasswordSchema>;
 export type SetPasswordInput = TypeOf<typeof setPasswordSchema>;
 export type DeleteSessionInput = TypeOf<typeof deleteSessionSchema>;
+export type DeleteSessionsInput = TypeOf<typeof deleteSessionsSchema>;

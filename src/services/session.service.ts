@@ -2,7 +2,7 @@ import { Prisma } from "@prisma/client";
 import { prisma } from "../utils/prisma";
 import { handlePrismaError } from "../utils/errors";
 
-// ------------------------- CREATE SESSION -------------------------
+// ------------------------- CREATE SESSION SERVICE -------------------------
 export const createSession = async (
   data: Prisma.SessionCreateArgs["data"],
   options: Omit<Prisma.SessionCreateArgs, "data"> = {}
@@ -14,7 +14,7 @@ export const createSession = async (
   }
 };
 
-// ------------------------- READ SESSION -------------------------
+// ------------------------- READ SESSION SERVICE -------------------------
 export const findSession = async (
   params: Prisma.SessionFindUniqueOrThrowArgs["where"],
   options: Omit<Prisma.SessionFindUniqueOrThrowArgs, "where"> = {}
@@ -26,7 +26,7 @@ export const findSession = async (
   }
 };
 
-// ------------------------- UPDATE SESSION -------------------------
+// ------------------------- UPDATE SESSION SERVICE -------------------------
 export const updateSession = async (
   params: Prisma.SessionUpdateArgs["where"],
   data: Prisma.SessionUpdateArgs["data"],
@@ -39,7 +39,7 @@ export const updateSession = async (
   }
 };
 
-// ------------------------- UPDATE SESSIONS -------------------------
+// ------------------------- UPDATE SESSIONS SERVICE -------------------------
 export const updateSessions = async (
   params: Prisma.SessionUpdateManyArgs["where"],
   data: Prisma.SessionUpdateManyArgs["data"]
@@ -51,13 +51,22 @@ export const updateSessions = async (
   }
 };
 
-// ------------------------- DELETE SESSION -------------------------
+// ------------------------- DELETE SESSION SERVICE -------------------------
 export const deleteSession = async (
   params: Prisma.SessionDeleteArgs["where"],
   options: Omit<Prisma.SessionDeleteArgs, "where">
 ) => {
   try {
     return await prisma.session.delete({ where: params, ...options });
+  } catch (error) {
+    throw handlePrismaError(error, "session");
+  }
+};
+
+// ------------------------- DELETE SESSIONS SERVICE -------------------------
+export const deleteSessions = async (params: Prisma.SessionDeleteManyArgs["where"]) => {
+  try {
+    return await prisma.session.deleteMany({ where: params });
   } catch (error) {
     throw handlePrismaError(error, "session");
   }

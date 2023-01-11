@@ -5,6 +5,7 @@ import { requireAuth } from "./middlewares/requireAuthentication";
 
 import {
   deleteSessionSchema,
+  deleteSessionsSchema,
   loginSchema,
   logoutSchema,
   resetPasswordSchema,
@@ -12,6 +13,7 @@ import {
 } from "./schemas/authentication.schema";
 import {
   deleteSessionController,
+  deleteSessionsController,
   loginController,
   logoutController,
   resetPasswordController,
@@ -81,6 +83,7 @@ const routes = (app: Express) => {
   app.post("/sessions/:type/login", [validateInputs(loginSchema)], loginController);
   app.post("/sessions/:type/logout", [requireAuth(), validateInputs(logoutSchema)], logoutController);
   app.delete("/sessions/:id", [requireAuth("ADMIN"), validateInputs(deleteSessionSchema)], deleteSessionController);
+  app.delete("/sessions", [requireAuth("ADMIN"), validateInputs(deleteSessionsSchema)], deleteSessionsController);
 
   // ------------------------- ADMINS -------------------------
   app.post("/admins", [requireAuth("ADMIN"), validateInputs(createAdminSchema)], createAdminController);
