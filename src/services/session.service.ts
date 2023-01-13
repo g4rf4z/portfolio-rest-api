@@ -64,9 +64,12 @@ export const deleteSession = async (
 };
 
 // ------------------------- DELETE SESSIONS SERVICE -------------------------
-export const deleteSessions = async (params: Prisma.SessionDeleteManyArgs["where"]) => {
+export const deleteSessions = async (
+  params: Prisma.SessionDeleteManyArgs["where"],
+  options: Omit<Prisma.SessionDeleteManyArgs, "where"> = {}
+) => {
   try {
-    return await prisma.session.deleteMany({ where: params });
+    return await prisma.session.deleteMany({ where: params, ...options });
   } catch (error) {
     throw handlePrismaError(error, "session");
   }
