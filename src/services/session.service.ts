@@ -14,13 +14,25 @@ export const createSession = async (
   }
 };
 
-// ------------------------- READ SESSION SERVICE -------------------------
+// ------------------------- FIND SESSION SERVICE -------------------------
 export const findSession = async (
   params: Prisma.SessionFindUniqueOrThrowArgs["where"],
   options: Omit<Prisma.SessionFindUniqueOrThrowArgs, "where"> = {}
 ) => {
   try {
     return await prisma.session.findFirstOrThrow({ where: params, ...options });
+  } catch (error) {
+    throw handlePrismaError(error, "session");
+  }
+};
+
+// ------------------------- FIND SESSIONS SERVICE -------------------------
+export const retrieveSessions = async (
+  params: Prisma.SessionFindManyArgs["where"],
+  options: Omit<Prisma.SessionFindManyArgs, "where"> = {}
+) => {
+  try {
+    return await prisma.session.findMany({ where: params, ...options });
   } catch (error) {
     throw handlePrismaError(error, "session");
   }

@@ -18,6 +18,7 @@ import {
   createSession,
   deleteSession,
   deleteSessions,
+  retrieveSessions,
   updateSessions,
 } from "../services/session.service";
 // import { findUniqueUser, updateUser } from "../services/user.service";
@@ -28,12 +29,44 @@ import type {
   LoginInput,
   LogoutInput,
   ResetPasswordInput,
+  RetrieveSessionsInput,
   SetPasswordInput,
 } from "../schemas/authentication.schema";
 import type { JwtTokenData } from "../utils/jwt.utils";
 import type { Request, Response } from "express";
 import type { AccountType, Prisma } from "@prisma/client";
 import { checkAdminClearance } from "../utils/checkPermissions";
+
+// ------------------------- RETRIEVE SESSIONS CONTROLLER -------------------------
+export const retrieveSessionsController = async (
+  req: Request<{}, {}, RetrieveSessionsInput["body"]>,
+  res: Response
+) => {
+  try {
+    const retrieveSessionsOptions = {
+      select: {
+        id: true,
+        createdAt: true,
+        updatedAt: true,
+        type: true,
+        isActive: true,
+        userAgent: true,
+        admin: true,
+        ownerId: true,
+      },
+    };
+
+    const retrievedSessions = await retrieveSessions(
+      req.params,
+      retrieveSessionsOptions
+    );
+
+    if (retrievedSessions.length === 0) return res.status(204).send();
+    return res.send(retrievedSessions);
+  } catch (error) {
+    return handleError(error, res);
+  }
+};
 
 // ------------------------- LOGIN CONTROLLER -------------------------
 export const loginController = async (

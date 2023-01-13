@@ -1,7 +1,31 @@
-import { object, string, boolean, TypeOf, enum as zodEnum } from "zod";
+import { AccountType, AdminRole } from "@prisma/client";
+import {
+  object,
+  string,
+  boolean,
+  TypeOf,
+  enum as zodEnum,
+  nativeEnum,
+} from "zod";
 import { validatePasswordComplexity } from "../utils/customValidators";
 
 const TYPE_VALUES = ["admin", "user"] as const;
+
+// ------------------------- RETRIEVE SESSIONS SCHEMA -------------------------
+export const retrieveSessionsSchema = object({
+  body: object({
+    params: object({
+      id: string().optional(),
+      type: nativeEnum(AccountType).optional(),
+      isActive: boolean().optional(),
+      userAgent: string().optional(),
+      admin: nativeEnum(AdminRole).optional(),
+      ownerId: string().optional(),
+    })
+      .strict()
+      .optional(),
+  }).strict(),
+});
 
 // ------------------------- LOGIN SCHEMA -------------------------
 export const loginSchema = object({
@@ -68,6 +92,7 @@ export const deleteSessionsSchema = object({
 });
 
 // ------------------------- EXPORTS -------------------------
+export type RetrieveSessionsInput = TypeOf<typeof retrieveSessionsSchema>;
 export type LoginInput = TypeOf<typeof loginSchema>;
 export type LogoutInput = TypeOf<typeof logoutSchema>;
 export type ResetPasswordInput = TypeOf<typeof resetPasswordSchema>;

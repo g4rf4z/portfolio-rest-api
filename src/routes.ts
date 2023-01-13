@@ -9,6 +9,7 @@ import {
   loginSchema,
   logoutSchema,
   resetPasswordSchema,
+  retrieveSessionsSchema,
   setPasswordSchema,
 } from "./schemas/authentication.schema";
 import {
@@ -17,6 +18,7 @@ import {
   loginController,
   logoutController,
   resetPasswordController,
+  retrieveSessionsController,
   setNewPasswordController,
 } from "./controllers/authentication.controller";
 
@@ -83,7 +85,11 @@ const routes = (app: Express) => {
       });
     }
   );
-  // app.get("/sessions/:type/status", [requireAuth(), validateInputs(statusSchema)], statusController);
+  app.get(
+    "/sessions/sessions-data",
+    [requireAuth("ADMIN"), validateInputs(retrieveSessionsSchema)],
+    retrieveSessionsController
+  );
   app.post(
     "/sessions/:type/login",
     [validateInputs(loginSchema)],
