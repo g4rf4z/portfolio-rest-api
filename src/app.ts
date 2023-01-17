@@ -1,5 +1,5 @@
-import dotenv from "dotenv"; // Imports .env file
-dotenv.config(); // Uses variables from .env file
+import dotenv from "dotenv";
+dotenv.config();
 
 import config from "config";
 import createServer from "./server/createServer";

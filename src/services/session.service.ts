@@ -14,7 +14,19 @@ export const createSession = async (
   }
 };
 
-// ------------------------- FIND SESSION SERVICE -------------------------
+// ------------------------- READ IS LOGGED IN SERVICE -------------------------
+export const retrieveIsLoggedIn = async (
+  params: Prisma.SessionFindManyArgs["where"],
+  options: Omit<Prisma.SessionFindManyArgs, "where"> = {}
+) => {
+  try {
+    return await prisma.session.findMany({ where: params, ...options });
+  } catch (error) {
+    throw handlePrismaError(error, "session");
+  }
+};
+
+// ------------------------- READ SESSION SERVICE -------------------------
 export const findSession = async (
   params: Prisma.SessionFindUniqueOrThrowArgs["where"],
   options: Omit<Prisma.SessionFindUniqueOrThrowArgs, "where"> = {}
@@ -26,7 +38,7 @@ export const findSession = async (
   }
 };
 
-// ------------------------- FIND SESSIONS SERVICE -------------------------
+// ------------------------- READ SESSIONS SERVICE -------------------------
 export const retrieveSessions = async (
   params: Prisma.SessionFindManyArgs["where"],
   options: Omit<Prisma.SessionFindManyArgs, "where"> = {}

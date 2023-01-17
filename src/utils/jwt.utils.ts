@@ -61,7 +61,7 @@ export const reIssueAccessToken = async ({
   if (!decoded || !decoded["sessionId"]) return false;
 
   // find corresponding session
-  const findSessionParams = { id: decoded.sessionId, isActive: true };
+  const Params = { id: decoded.sessionId, isActive: true };
   let foundSession: AdminSession | UserSession;
   let account: Admin | User | undefined = undefined;
 

@@ -11,6 +11,22 @@ import { validatePasswordComplexity } from "../utils/customValidators";
 
 const TYPE_VALUES = ["admin", "user"] as const;
 
+// ------------------------- READ IS LOGGED IN SCHEMA -------------------------
+export const retrieveIsLoggedInSchema = object({
+  body: object({
+    params: object({
+      id: string().optional(),
+      type: nativeEnum(AccountType).optional(),
+      isActive: boolean().optional(),
+      userAgent: string().optional(),
+      admin: nativeEnum(AdminRole).optional(),
+      ownerId: string().optional(),
+    })
+      .strict()
+      .optional(),
+  }).strict(),
+});
+
 // ------------------------- RETRIEVE SESSIONS SCHEMA -------------------------
 export const retrieveSessionsSchema = object({
   body: object({
@@ -92,6 +108,7 @@ export const deleteSessionsSchema = object({
 });
 
 // ------------------------- EXPORTS -------------------------
+export type RetrieveIsLoggedInInput = TypeOf<typeof retrieveIsLoggedInSchema>;
 export type RetrieveSessionsInput = TypeOf<typeof retrieveSessionsSchema>;
 export type LoginInput = TypeOf<typeof loginSchema>;
 export type LogoutInput = TypeOf<typeof logoutSchema>;

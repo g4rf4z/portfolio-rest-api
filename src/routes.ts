@@ -9,6 +9,7 @@ import {
   loginSchema,
   logoutSchema,
   resetPasswordSchema,
+  retrieveIsLoggedInSchema,
   retrieveSessionsSchema,
   setPasswordSchema,
 } from "./schemas/authentication.schema";
@@ -18,6 +19,7 @@ import {
   loginController,
   logoutController,
   resetPasswordController,
+  retrieveIsLoggedInController,
   retrieveSessionsController,
   setNewPasswordController,
 } from "./controllers/authentication.controller";
@@ -77,16 +79,12 @@ const routes = (app: Express) => {
 
   // ------------------------- SESSIONS -------------------------
   app.get(
-    "/sessions/:type/isLoggedIn",
-    [requireAuth()],
-    (req: Request, res: Response) => {
-      return res.send({
-        account: res.locals.account,
-      });
-    }
+    "/sessions/is-logged-in",
+    [requireAuth("ADMIN"), validateInputs(retrieveIsLoggedInSchema)],
+    retrieveIsLoggedInController
   );
   app.get(
-    "/sessions/sessions-data",
+    "/sessions/sessions",
     [requireAuth("ADMIN"), validateInputs(retrieveSessionsSchema)],
     retrieveSessionsController
   );
