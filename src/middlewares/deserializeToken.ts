@@ -7,7 +7,6 @@ const deserializeToken = async (
   next: NextFunction
 ) => {
   const { accessToken, refreshToken } = req.cookies;
-
   if (!accessToken && !refreshToken) return next();
 
   const { decoded, expired } = verifyJwt(accessToken);

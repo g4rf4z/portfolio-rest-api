@@ -1,6 +1,6 @@
-import { object, string, number, boolean, date, TypeOf, nativeEnum } from "zod";
+import { object, string, TypeOf } from "zod";
 
-// CREATE EXPERIENCE
+// ------------------------- CREATE EXPERIENCE SCHEMA -------------------------
 export const createExperienceSchema = object({
   body: object({
     data: object({
@@ -15,8 +15,15 @@ export const createExperienceSchema = object({
   }).strict(),
 });
 
-// FIND EXPERIENCES
-export const listExperiencesSchema = object({
+// ------------------------- READ EXPERIENCE SCHEMA -------------------------
+export const readExperienceSchema = object({
+  params: object({
+    id: string(),
+  }).strict(),
+});
+
+// ------------------------- READ EXPERIENCES SCHEMA -------------------------
+export const readExperiencesSchema = object({
   body: object({
     params: object({
       id: string().optional(),
@@ -33,14 +40,7 @@ export const listExperiencesSchema = object({
   }).strict(),
 });
 
-// FIND EXPERIENCE
-export const findExperienceSchema = object({
-  params: object({
-    id: string(),
-  }).strict(),
-});
-
-// UPDATE EXPERIENCE
+// ------------------------- UPDATE EXPERIENCE SCHEMA -------------------------
 export const updateExperienceSchema = object({
   params: object({
     id: string(),
@@ -58,7 +58,7 @@ export const updateExperienceSchema = object({
   }).strict(),
 });
 
-// DELETE EXPERIENCE
+// ------------------------- DELETE EXPERIENCE SCHEMA -------------------------
 export const deleteExperienceSchema = object({
   params: object({
     id: string(),
@@ -66,7 +66,7 @@ export const deleteExperienceSchema = object({
 });
 
 export type CreateExperienceInput = TypeOf<typeof createExperienceSchema>;
-export type ListExperiencesInput = TypeOf<typeof listExperiencesSchema>;
-export type FindExperienceInput = TypeOf<typeof findExperienceSchema>;
+export type FindExperienceInput = TypeOf<typeof readExperienceSchema>;
+export type ListExperiencesInput = TypeOf<typeof readExperiencesSchema>;
 export type UpdateExperienceInput = TypeOf<typeof updateExperienceSchema>;
 export type DeleteExperienceInput = TypeOf<typeof deleteExperienceSchema>;

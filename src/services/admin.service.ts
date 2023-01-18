@@ -1,8 +1,8 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "../utils/prisma";
-import { CustomError, handlePrismaError } from "../utils/errors";
+import { handlePrismaError } from "../utils/errors";
 
-// CREATE ADMIN
+// ------------------------- CREATE ADMIN SERVICE -------------------------
 export const createAdmin = async (
   data: Prisma.AdminCreateArgs["data"],
   options: Omit<Prisma.AdminCreateArgs, "data"> = {}
@@ -14,20 +14,8 @@ export const createAdmin = async (
   }
 };
 
-// FIND ADMINS
-export const findManyAdmins = async (
-  params: Prisma.AdminFindManyArgs["where"],
-  options: Omit<Prisma.AdminFindManyArgs, "where"> = {}
-) => {
-  try {
-    return await prisma.admin.findMany({ where: params, ...options });
-  } catch (error) {
-    throw handlePrismaError(error, "admin");
-  }
-};
-
-// FIND ADMIN
-export const findUniqueAdmin = async (
+// ------------------------- READ ADMIN SERVICE -------------------------
+export const readAdmin = async (
   params: Prisma.AdminFindUniqueOrThrowArgs["where"],
   options: Omit<Prisma.AdminFindUniqueOrThrowArgs, "where"> = {}
 ) => {
@@ -38,7 +26,19 @@ export const findUniqueAdmin = async (
   }
 };
 
-// UPDATE ADMIN
+// ------------------------- READ ADMINS SERVICE -------------------------
+export const readAdmins = async (
+  params: Prisma.AdminFindManyArgs["where"],
+  options: Omit<Prisma.AdminFindManyArgs, "where"> = {}
+) => {
+  try {
+    return await prisma.admin.findMany({ where: params, ...options });
+  } catch (error) {
+    throw handlePrismaError(error, "admin");
+  }
+};
+
+// ------------------------- UPDATE ADMIN SERVICE -------------------------
 export const updateAdmin = async (
   params: Prisma.AdminUpdateArgs["where"],
   data: Prisma.AdminUpdateArgs["data"],
@@ -55,7 +55,7 @@ export const updateAdmin = async (
   }
 };
 
-// DELETE ADMIN
+// ------------------------- DELETE ADMIN SERVICE -------------------------
 export const deleteAdmin = async (
   params: Prisma.AdminDeleteArgs["where"],
   options: Omit<Prisma.AdminDeleteArgs, "where">

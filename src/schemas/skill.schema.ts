@@ -1,6 +1,6 @@
-import { object, string, number, boolean, TypeOf, nativeEnum } from "zod";
+import { object, string, number, TypeOf } from "zod";
 
-// CREATE SKILL
+// ------------------------- CREATE SKILL SCHEMA -------------------------
 export const createSkillSchema = object({
   body: object({
     data: object({
@@ -13,8 +13,15 @@ export const createSkillSchema = object({
   }).strict(),
 });
 
-// FIND SKILLS
-export const listSkillsSchema = object({
+// ------------------------- READ SKILL SCHEMA -------------------------
+export const readSkillSchema = object({
+  params: object({
+    id: string(),
+  }).strict(),
+});
+
+// ------------------------- READ SKILLS SCHEMA -------------------------
+export const readSkillsSchema = object({
   body: object({
     params: object({
       id: string().optional(),
@@ -29,14 +36,7 @@ export const listSkillsSchema = object({
   }).strict(),
 });
 
-// FIND SKILL
-export const findSkillSchema = object({
-  params: object({
-    id: string(),
-  }).strict(),
-});
-
-// UPDATE SKILL
+// ------------------------- UPDATE SKILL SCHEMA -------------------------
 export const updateSkillSchema = object({
   params: object({
     id: string(),
@@ -52,7 +52,7 @@ export const updateSkillSchema = object({
   }).strict(),
 });
 
-// DELETE SKILL
+// ------------------------- DELETE SKILLS SCHEMA -------------------------
 export const deleteSkillSchema = object({
   params: object({
     id: string(),
@@ -60,7 +60,7 @@ export const deleteSkillSchema = object({
 });
 
 export type CreateSkillInput = TypeOf<typeof createSkillSchema>;
-export type ListSkillsInput = TypeOf<typeof listSkillsSchema>;
-export type FindSkillInput = TypeOf<typeof findSkillSchema>;
+export type FindSkillInput = TypeOf<typeof readSkillSchema>;
+export type ListSkillsInput = TypeOf<typeof readSkillsSchema>;
 export type UpdateSkillInput = TypeOf<typeof updateSkillSchema>;
 export type DeleteSkillInput = TypeOf<typeof deleteSkillSchema>;

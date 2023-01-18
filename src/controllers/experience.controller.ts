@@ -1,13 +1,15 @@
-import { handleError } from "../utils/errors";
+import { Request, Response } from "express";
 import { checkAdminClearance } from "../utils/checkPermissions";
+import { handleError } from "../utils/errors";
+
 import {
   createExperience,
-  findManyExperiences,
-  findUniqueExperience,
+  readExperience,
+  readExperiences,
   updateExperience,
   deleteExperience,
 } from "../services/experience.service";
-import type { Request, Response } from "express";
+
 import {
   CreateExperienceInput,
   FindExperienceInput,
@@ -16,7 +18,7 @@ import {
   DeleteExperienceInput,
 } from "../schemas/experience.schema";
 
-// CREATE EXPERIENCE CONTROLLER
+// ------------------------- CREATE EXPERIENCE CONTROLLER -------------------------
 export const createExperienceController = async (
   req: Request<{}, {}, CreateExperienceInput["body"]>,
   res: Response
@@ -28,6 +30,7 @@ export const createExperienceController = async (
       select: {
         id: true,
         createdAt: true,
+        updatedAt: true,
         position: true,
         company: true,
         city: true,
@@ -37,7 +40,6 @@ export const createExperienceController = async (
         tasks: true,
       },
     };
-
     const createdExperience = await createExperience(
       req.body.data,
       createExperienceOptions
@@ -48,46 +50,17 @@ export const createExperienceController = async (
   }
 };
 
-// EXPERIENCE LIST CONTROLLER
-export const listExperiencesController = async (
-  req: Request<{}, {}, ListExperiencesInput["body"]>,
-  res: Response
-) => {
-  try {
-    const listOptions = {
-      select: {
-        id: true,
-        createdAt: true,
-        position: true,
-        company: true,
-        city: true,
-        country: true,
-        from: true,
-        to: true,
-        tasks: true,
-      },
-    };
-    const foundExperiences = await findManyExperiences(
-      req.body.params,
-      listOptions
-    );
-    if (foundExperiences.length === 0) return res.status(204).send();
-    return res.send(foundExperiences);
-  } catch (error) {
-    return handleError(error, res);
-  }
-};
-
-// FIND EXPERIENCE CONTROLLER
-export const findExperienceController = async (
+// ------------------------- READ EXPERIENCE CONTROLLER -------------------------
+export const readExperienceController = async (
   req: Request<FindExperienceInput["params"], {}, {}>,
   res: Response
 ) => {
   try {
-    const findExperienceOptions = {
+    const readExperienceOptions = {
       select: {
         id: true,
         createdAt: true,
+        updatedAt: true,
         position: true,
         company: true,
         city: true,
@@ -97,9 +70,9 @@ export const findExperienceController = async (
         tasks: true,
       },
     };
-    const foundExperience = await findUniqueExperience(
+    const foundExperience = await readExperience(
       req.params,
-      findExperienceOptions
+      readExperienceOptions
     );
     return res.send(foundExperience);
   } catch (error) {
@@ -107,7 +80,39 @@ export const findExperienceController = async (
   }
 };
 
-// UPDATE EXPERIENCE CONTROLLER
+// ------------------------- READ EXPERIENCES CONTROLLER -------------------------
+export const readExperiencesController = async (
+  req: Request<{}, {}, ListExperiencesInput["body"]>,
+  res: Response
+) => {
+  try {
+    const readExperiencesOptions = {
+      select: {
+        id: true,
+        createdAt: true,
+        updatedAt: true,
+        position: true,
+        company: true,
+        city: true,
+        country: true,
+        from: true,
+        to: true,
+        tasks: true,
+      },
+    };
+    const foundExperiences = await readExperiences(
+      req.body.params,
+      readExperiencesOptions
+    );
+    if (foundExperiences.length === 0) return res.status(204).send();
+
+    return res.send(foundExperiences);
+  } catch (error) {
+    return handleError(error, res);
+  }
+};
+
+// ------------------------- UPDATE EXPERIENCE CONTROLLER -------------------------
 export const updateExperienceController = async (
   req: Request<
     UpdateExperienceInput["params"],
@@ -123,6 +128,7 @@ export const updateExperienceController = async (
       select: {
         id: true,
         createdAt: true,
+        updatedAt: true,
         position: true,
         company: true,
         city: true,
@@ -132,7 +138,6 @@ export const updateExperienceController = async (
         tasks: true,
       },
     };
-
     const updatedExperience = await updateExperience(
       { id: req.params.id },
       req.body.data,
@@ -144,7 +149,7 @@ export const updateExperienceController = async (
   }
 };
 
-// DELETE EXPERIENCE CONTROLLER
+// ------------------------- DELETE EXPERIENCE CONTROLLER -------------------------
 export const deleteExperienceController = async (
   req: Request<DeleteExperienceInput["params"], {}, {}>,
   res: Response
@@ -156,6 +161,7 @@ export const deleteExperienceController = async (
       select: {
         id: true,
         createdAt: true,
+        updatedAt: true,
         position: true,
         company: true,
         city: true,
@@ -165,12 +171,10 @@ export const deleteExperienceController = async (
         tasks: true,
       },
     };
-
     const deletedExperience = await deleteExperience(
       { id: req.params.id },
       deleteExperienceOptions
     );
-
     return res.send(deletedExperience);
   } catch (error) {
     return handleError(error, res);

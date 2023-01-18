@@ -8,7 +8,6 @@ import routes from "../routes";
 
 const createServer = () => {
   const app = express();
-
   app.use(helmet({ expectCt: false }));
   app.use(
     cors({

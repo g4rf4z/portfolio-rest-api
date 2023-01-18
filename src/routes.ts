@@ -1,7 +1,7 @@
-import { Express, Request, Response } from "express";
+import { Express } from "express";
+import { requireAuth } from "./middlewares/requireAuthentication";
 
 import validateInputs from "./middlewares/validateInputs";
-import { requireAuth } from "./middlewares/requireAuthentication";
 
 import {
   deleteSessionSchema,
@@ -13,6 +13,7 @@ import {
   retrieveSessionsSchema,
   setPasswordSchema,
 } from "./schemas/authentication.schema";
+
 import {
   deleteSessionController,
   deleteSessionsController,
@@ -26,47 +27,54 @@ import {
 
 import {
   createAdminSchema,
-  deleteAdminSchema,
-  disableAdminSchema,
-  findAdminSchema,
-  listAdminsSchema,
+  readAdminSchema,
+  readAdminsSchema,
+  updateCurrentAdminNameSchema,
   updateAdminRoleSchema,
+  disableAdminSchema,
+  deleteAdminSchema,
+  updateCurrentAdminEmailSchema,
 } from "./schemas/admin.schema";
+
 import {
   createAdminController,
-  deleteAdminController,
-  disableAdminController,
-  findAdminController,
-  listAdminsController,
+  readAdminController,
+  readAdminsController,
+  updateCurrentAdminNameController,
   updateAdminRoleController,
+  disableAdminController,
+  deleteAdminController,
+  updateCurrentAdminEmailController,
 } from "./controllers/admin.controller";
 
 import {
   createSkillSchema,
-  listSkillsSchema,
-  findSkillSchema,
+  readSkillSchema,
+  readSkillsSchema,
   updateSkillSchema,
   deleteSkillSchema,
 } from "./schemas/skill.schema";
+
 import {
   createSkillController,
-  listSkillsController,
-  findSkillController,
+  readSkillController,
+  readSkillsController,
   updateSkillController,
   deleteSkillController,
 } from "./controllers/skill.controller";
 
 import {
   createExperienceSchema,
-  listExperiencesSchema,
-  findExperienceSchema,
+  readExperienceSchema,
+  readExperiencesSchema,
   updateExperienceSchema,
   deleteExperienceSchema,
 } from "./schemas/experience.schema";
+
 import {
   createExperienceController,
-  listExperiencesController,
-  findExperienceController,
+  readExperienceController,
+  readExperiencesController,
   updateExperienceController,
   deleteExperienceController,
 } from "./controllers/experience.controller";
@@ -74,7 +82,7 @@ import {
 const routes = (app: Express) => {
   // ------------------------- HEALTH CHECK -------------------------
   app.get("/", (req, res) => {
-    return res.send({ message: "Portfolio REST API is working" });
+    return res.send({ message: "portfolio-rest-api is working" });
   });
 
   // ------------------------- SESSIONS -------------------------
@@ -116,14 +124,29 @@ const routes = (app: Express) => {
     createAdminController
   );
   app.get(
-    "/admins",
-    [requireAuth("ADMIN"), validateInputs(listAdminsSchema)],
-    listAdminsController
+    "/admins/:id",
+    [requireAuth("ADMIN"), validateInputs(readAdminSchema)],
+    readAdminController
   );
   app.get(
-    "/admins/:id",
-    [requireAuth("ADMIN"), validateInputs(findAdminSchema)],
-    findAdminController
+    "/admins",
+    [requireAuth("ADMIN"), validateInputs(readAdminsSchema)],
+    readAdminsController
+  );
+  app.patch(
+    "/admins/update-name",
+    [requireAuth("ADMIN"), validateInputs(updateCurrentAdminNameSchema)],
+    updateCurrentAdminNameController
+  );
+  app.patch(
+    "/admins/update-email",
+    [requireAuth("ADMIN"), validateInputs(updateCurrentAdminEmailSchema)],
+    updateCurrentAdminEmailController
+  );
+  app.patch(
+    "/admins/update-password",
+    [requireAuth("ADMIN"), validateInputs(updateCurrentAdminEmailSchema)],
+    updateCurrentAdminEmailController
   );
   app.patch(
     "/admins/:id/update-role",
@@ -147,11 +170,11 @@ const routes = (app: Express) => {
     [requireAuth("ADMIN"), validateInputs(createSkillSchema)],
     createSkillController
   );
-  app.get("/skills", [validateInputs(listSkillsSchema)], listSkillsController);
+  app.get("/skills", [validateInputs(readSkillsSchema)], readSkillsController);
   app.get(
     "/skills/:id",
-    [validateInputs(findSkillSchema)],
-    findSkillController
+    [validateInputs(readSkillSchema)],
+    readSkillController
   );
   app.patch(
     "/skills/:id/update-role",
@@ -172,13 +195,13 @@ const routes = (app: Express) => {
   );
   app.get(
     "/experiences",
-    [validateInputs(listExperiencesSchema)],
-    listExperiencesController
+    [validateInputs(readExperiencesSchema)],
+    readExperiencesController
   );
   app.get(
     "/experiences/:id",
-    [validateInputs(findExperienceSchema)],
-    findExperienceController
+    [validateInputs(readExperienceSchema)],
+    readExperienceController
   );
   app.patch(
     "/experiences/:id/update-role",

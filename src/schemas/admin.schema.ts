@@ -1,14 +1,15 @@
+import { object, string, nativeEnum, boolean, TypeOf } from "zod";
 import { AdminRole } from "@prisma/client";
-import { object, string, boolean, TypeOf, nativeEnum } from "zod";
 import { validatePasswordComplexity } from "../utils/customValidators";
 
+// ------------------------- CREATE ADMIN SCHEMA -------------------------
 export const createAdminSchema = object({
   body: object({
     data: object({
       firstname: string(),
       lastname: string(),
-      email: string().email(),
       nickname: string().min(3),
+      email: string().email(),
       password: string().min(8),
       passwordConfirmation: string().optional(),
       role: nativeEnum(AdminRole).optional(),
@@ -19,7 +20,15 @@ export const createAdminSchema = object({
   }).strict(),
 });
 
-export const listAdminsSchema = object({
+// ------------------------- READ ADMIN SCHEMA -------------------------
+export const readAdminSchema = object({
+  params: object({
+    id: string(),
+  }).strict(),
+});
+
+// ------------------------- READ ADMINS SCHEMA -------------------------
+export const readAdminsSchema = object({
   body: object({
     params: object({
       id: string().optional(),
@@ -34,44 +43,18 @@ export const listAdminsSchema = object({
   }).strict(),
 });
 
-export const findAdminSchema = object({
-  params: object({
-    id: string(),
-  }).strict(),
-});
-
-export const updateAdminRoleSchema = object({
-  params: object({
-    id: string(),
-  }).strict(),
-  body: object({
-    data: object({
-      role: nativeEnum(AdminRole),
-    }).strict(),
-  }).strict(),
-});
-
-export const disableAdminSchema = object({
-  params: object({
-    id: string(),
-  }).strict(),
-});
-
-export const deleteAdminSchema = object({
-  params: object({
-    id: string(),
-  }).strict(),
-});
-
-export const updateCurrentAdminSchema = object({
+// ------------------------- UPDATE CURRENT ADMIN NAME SCHEMA -------------------------
+export const updateCurrentAdminNameSchema = object({
   body: object({
     data: object({
       firstname: string().optional(),
       lastname: string().optional(),
+      nickname: string().optional(),
     }).strict(),
   }).strict(),
 });
 
+// ------------------------- UPDATE CURRENT ADMIN EMAIL SCHEMA -------------------------
 export const updateCurrentAdminEmailSchema = object({
   body: object({
     data: object({
@@ -80,6 +63,7 @@ export const updateCurrentAdminEmailSchema = object({
   }).strict(),
 });
 
+// ------------------------- UPDATE CURRENT ADMIN PASSWORD SCHEMA -------------------------
 export const updateCurrentAdminPasswordSchema = object({
   body: object({
     data: object({
@@ -93,17 +77,44 @@ export const updateCurrentAdminPasswordSchema = object({
   }).strict(),
 });
 
-export type CreateAdminInput = TypeOf<typeof createAdminSchema>;
-export type ListAdminsInput = TypeOf<typeof listAdminsSchema>;
-export type FindAdminInput = TypeOf<typeof findAdminSchema>;
-export type UpdateAdminRoleInput = TypeOf<typeof updateAdminRoleSchema>;
-export type DisableAdminInput = TypeOf<typeof disableAdminSchema>;
-export type DeleteAdminInput = TypeOf<typeof deleteAdminSchema>;
+// ------------------------- UPDATE ADMIN ROLE SCHEMA -------------------------
+export const updateAdminRoleSchema = object({
+  params: object({
+    id: string(),
+  }).strict(),
+  body: object({
+    data: object({
+      role: nativeEnum(AdminRole),
+    }).strict(),
+  }).strict(),
+});
 
-export type UpdateCurrentAdminInput = TypeOf<typeof updateCurrentAdminSchema>;
+// ------------------------- DISABLE ADMIN SCHEMA -------------------------
+export const disableAdminSchema = object({
+  params: object({
+    id: string(),
+  }).strict(),
+});
+
+// ------------------------- DELETE ADMIN SCHEMA -------------------------
+export const deleteAdminSchema = object({
+  params: object({
+    id: string(),
+  }).strict(),
+});
+
+export type CreateAdminInput = TypeOf<typeof createAdminSchema>;
+export type FindAdminInput = TypeOf<typeof readAdminSchema>;
+export type ListAdminsInput = TypeOf<typeof readAdminsSchema>;
+export type UpdateCurrentAdminInput = TypeOf<
+  typeof updateCurrentAdminNameSchema
+>;
 export type UpdateCurrentAdminEmailInput = TypeOf<
   typeof updateCurrentAdminEmailSchema
 >;
 export type UpdateCurrentAdminPasswordInput = TypeOf<
   typeof updateCurrentAdminPasswordSchema
 >;
+export type UpdateAdminRoleInput = TypeOf<typeof updateAdminRoleSchema>;
+export type DisableAdminInput = TypeOf<typeof disableAdminSchema>;
+export type DeleteAdminInput = TypeOf<typeof deleteAdminSchema>;

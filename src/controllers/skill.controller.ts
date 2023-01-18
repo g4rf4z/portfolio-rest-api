@@ -1,7 +1,15 @@
+import { Request, Response } from "express";
 import { handleError } from "../utils/errors";
 import { checkAdminClearance } from "../utils/checkPermissions";
-import { createSkill, findManySkills, findUniqueSkill, updateSkill, deleteSkill } from "../services/skill.service";
-import type { Request, Response } from "express";
+
+import {
+  createSkill,
+  readSkill,
+  readSkills,
+  updateSkill,
+  deleteSkill,
+} from "../services/skill.service";
+
 import {
   CreateSkillInput,
   FindSkillInput,
@@ -10,8 +18,11 @@ import {
   DeleteSkillInput,
 } from "../schemas/skill.schema";
 
-// CREATE SKILL CONTROLLER
-export const createSkillController = async (req: Request<{}, {}, CreateSkillInput["body"]>, res: Response) => {
+// ------------------------- CREATE SKILL CONTROLLER -------------------------
+export const createSkillController = async (
+  req: Request<{}, {}, CreateSkillInput["body"]>,
+  res: Response
+) => {
   if (!checkAdminClearance(res, ["SUPERADMIN", "ADMIN"])) return;
 
   try {
@@ -19,6 +30,7 @@ export const createSkillController = async (req: Request<{}, {}, CreateSkillInpu
       select: {
         id: true,
         createdAt: true,
+        updatedAt: true,
         name: true,
         icon: true,
         iconWeight: true,
@@ -26,7 +38,6 @@ export const createSkillController = async (req: Request<{}, {}, CreateSkillInpu
         progress: true,
       },
     };
-
     const createdSkill = await createSkill(req.body.data, createSkillOptions);
     return res.send(createdSkill);
   } catch (error) {
@@ -34,13 +45,17 @@ export const createSkillController = async (req: Request<{}, {}, CreateSkillInpu
   }
 };
 
-// SKILL LIST CONTROLLER
-export const listSkillsController = async (req: Request<{}, {}, ListSkillsInput["body"]>, res: Response) => {
+// ------------------------- READ SKILL CONTROLLER -------------------------
+export const readSkillController = async (
+  req: Request<FindSkillInput["params"], {}, {}>,
+  res: Response
+) => {
   try {
-    const listOptions = {
+    const readSkillOptions = {
       select: {
         id: true,
         createdAt: true,
+        updatedAt: true,
         name: true,
         icon: true,
         iconWeight: true,
@@ -48,36 +63,41 @@ export const listSkillsController = async (req: Request<{}, {}, ListSkillsInput[
         progress: true,
       },
     };
-    const foundSkills = await findManySkills(req.body.params, listOptions);
-    if (foundSkills.length === 0) return res.status(204).send();
-    return res.send(foundSkills);
-  } catch (error) {
-    return handleError(error, res);
-  }
-};
-
-// FIND SKILL CONTROLLER
-export const findSkillController = async (req: Request<FindSkillInput["params"], {}, {}>, res: Response) => {
-  try {
-    const findSkillOptions = {
-      select: {
-        id: true,
-        createdAt: true,
-        name: true,
-        icon: true,
-        iconWeight: true,
-        iconColor: true,
-        progress: true,
-      },
-    };
-    const foundSkill = await findUniqueSkill(req.params, findSkillOptions);
+    const foundSkill = await readSkill(req.params, readSkillOptions);
     return res.send(foundSkill);
   } catch (error) {
     return handleError(error, res);
   }
 };
 
-// UPDATE SKILL CONTROLLER
+// ------------------------- READ SKILLS CONTROLLER -------------------------
+export const readSkillsController = async (
+  req: Request<{}, {}, ListSkillsInput["body"]>,
+  res: Response
+) => {
+  try {
+    const readSkillsOptions = {
+      select: {
+        id: true,
+        createdAt: true,
+        updatedAt: true,
+        name: true,
+        icon: true,
+        iconWeight: true,
+        iconColor: true,
+        progress: true,
+      },
+    };
+    const foundSkills = await readSkills(req.body.params, readSkillsOptions);
+    if (foundSkills.length === 0) return res.status(204).send();
+
+    return res.send(foundSkills);
+  } catch (error) {
+    return handleError(error, res);
+  }
+};
+
+// ------------------------- UPDATE SKILL CONTROLLER -------------------------
 export const updateSkillController = async (
   req: Request<UpdateSkillInput["params"], {}, UpdateSkillInput["body"]>,
   res: Response
@@ -89,6 +109,7 @@ export const updateSkillController = async (
       select: {
         id: true,
         createdAt: true,
+        updatedAt: true,
         name: true,
         icon: true,
         iconWeight: true,
@@ -96,16 +117,22 @@ export const updateSkillController = async (
         progress: true,
       },
     };
-
-    const updatedSkill = await updateSkill({ id: req.params.id }, req.body.data, updateSkillOptions);
+    const updatedSkill = await updateSkill(
+      { id: req.params.id },
+      req.body.data,
+      updateSkillOptions
+    );
     return res.send(updatedSkill);
   } catch (error) {
     return handleError(error, res);
   }
 };
 
-// DELETE SKILL CONTROLLER
-export const deleteSkillController = async (req: Request<DeleteSkillInput["params"], {}, {}>, res: Response) => {
+// ------------------------- DELETE SKILL CONTROLLER -------------------------
+export const deleteSkillController = async (
+  req: Request<DeleteSkillInput["params"], {}, {}>,
+  res: Response
+) => {
   try {
     if (!checkAdminClearance(res, ["SUPERADMIN", "ADMIN"])) return;
 
@@ -113,6 +140,7 @@ export const deleteSkillController = async (req: Request<DeleteSkillInput["param
       select: {
         id: true,
         createdAt: true,
+        updatedAt: true,
         name: true,
         icon: true,
         iconWeight: true,
@@ -120,9 +148,10 @@ export const deleteSkillController = async (req: Request<DeleteSkillInput["param
         progress: true,
       },
     };
-
-    const deletedSkill = await deleteSkill({ id: req.params.id }, deleteSkillOptions);
-
+    const deletedSkill = await deleteSkill(
+      { id: req.params.id },
+      deleteSkillOptions
+    );
     return res.send(deletedSkill);
   } catch (error) {
     return handleError(error, res);

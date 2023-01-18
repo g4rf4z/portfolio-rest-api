@@ -1,19 +1,22 @@
 import crypto from "crypto";
+
 import {
   PrismaClientKnownRequestError,
   PrismaClientUnknownRequestError,
 } from "@prisma/client/runtime";
-import { findUniqueAdmin, updateAdmin } from "../services/admin.service";
+
+import { readAdmin, updateAdmin } from "../services/admin.service";
 import { CustomError, handleError } from "../utils/errors";
 import { compareData, hashString } from "../utils/hash.utils";
 import { newAccessToken, newRefreshToken } from "../utils/jwt.utils";
-// import { sendEmail } from "../utils/emails";
+
 import {
   createResetPasswordToken,
   findResetPasswordToken,
   updateResetPasswordToken,
   updateResetPasswordTokens,
 } from "../services/resetPasswordToken.service";
+
 import {
   createSession,
   deleteSession,
@@ -22,7 +25,6 @@ import {
   retrieveSessions,
   updateSessions,
 } from "../services/session.service";
-// import { findUniqueUser, updateUser } from "../services/user.service";
 
 import type {
   DeleteSessionInput,
@@ -34,6 +36,7 @@ import type {
   RetrieveSessionsInput,
   SetPasswordInput,
 } from "../schemas/authentication.schema";
+
 import type { JwtTokenData } from "../utils/jwt.utils";
 import type { Request, Response } from "express";
 import type { AccountType, Prisma } from "@prisma/client";
@@ -60,6 +63,7 @@ export const retrieveIsLoggedInController = async (
 
     const retrievedIsLoggedIn = await retrieveIsLoggedIn(
       {
+        id: res.locals.account.id,
         isActive: true,
       },
       retrieveIsLoggedInOptions
@@ -119,7 +123,7 @@ export const loginController = async (
     // check if account exist
     try {
       const findOwnerParams = { email: req.body.data.email };
-      foundOwner = await findUniqueAdmin(findOwnerParams);
+      foundOwner = await readAdmin(findOwnerParams);
     } catch (error) {
       throw badCredentials;
     }
@@ -257,7 +261,7 @@ export const resetPasswordController = async (
 
     // check if account exist
     const foundAccountParams = { email: req.body.data.email };
-    foundAccount = await findUniqueAdmin(foundAccountParams);
+    foundAccount = await readAdmin(foundAccountParams);
 
     // invalidate previous reset password tokens
     const accountType: AccountType = "ADMIN";

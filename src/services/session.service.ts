@@ -2,7 +2,7 @@ import { Prisma } from "@prisma/client";
 import { prisma } from "../utils/prisma";
 import { handlePrismaError } from "../utils/errors";
 
-// ------------------------- CREATE SESSION SERVICE -------------------------
+// ------------------------- CREATE SESSION -------------------------
 export const createSession = async (
   data: Prisma.SessionCreateArgs["data"],
   options: Omit<Prisma.SessionCreateArgs, "data"> = {}
@@ -14,7 +14,7 @@ export const createSession = async (
   }
 };
 
-// ------------------------- READ IS LOGGED IN SERVICE -------------------------
+// ------------------------- READ IS LOGGED IN -------------------------
 export const retrieveIsLoggedIn = async (
   params: Prisma.SessionFindManyArgs["where"],
   options: Omit<Prisma.SessionFindManyArgs, "where"> = {}
@@ -26,7 +26,7 @@ export const retrieveIsLoggedIn = async (
   }
 };
 
-// ------------------------- READ SESSION SERVICE -------------------------
+// ------------------------- READ SESSION -------------------------
 export const findSession = async (
   params: Prisma.SessionFindUniqueOrThrowArgs["where"],
   options: Omit<Prisma.SessionFindUniqueOrThrowArgs, "where"> = {}
@@ -38,7 +38,7 @@ export const findSession = async (
   }
 };
 
-// ------------------------- READ SESSIONS SERVICE -------------------------
+// ------------------------- READ SESSIONS -------------------------
 export const retrieveSessions = async (
   params: Prisma.SessionFindManyArgs["where"],
   options: Omit<Prisma.SessionFindManyArgs, "where"> = {}
@@ -50,7 +50,7 @@ export const retrieveSessions = async (
   }
 };
 
-// ------------------------- UPDATE SESSION SERVICE -------------------------
+// ------------------------- UPDATE SESSION -------------------------
 export const updateSession = async (
   params: Prisma.SessionUpdateArgs["where"],
   data: Prisma.SessionUpdateArgs["data"],
@@ -63,7 +63,7 @@ export const updateSession = async (
   }
 };
 
-// ------------------------- UPDATE SESSIONS SERVICE -------------------------
+// ------------------------- UPDATE SESSIONS -------------------------
 export const updateSessions = async (
   params: Prisma.SessionUpdateManyArgs["where"],
   data: Prisma.SessionUpdateManyArgs["data"]
@@ -75,7 +75,7 @@ export const updateSessions = async (
   }
 };
 
-// ------------------------- DELETE SESSION SERVICE -------------------------
+// ------------------------- DELETE SESSION -------------------------
 export const deleteSession = async (
   params: Prisma.SessionDeleteArgs["where"],
   options: Omit<Prisma.SessionDeleteArgs, "where">
@@ -87,7 +87,7 @@ export const deleteSession = async (
   }
 };
 
-// ------------------------- DELETE SESSIONS SERVICE -------------------------
+// ------------------------- DELETE SESSIONS -------------------------
 export const deleteSessions = async (
   params: Prisma.SessionDeleteManyArgs["where"],
   options: Omit<Prisma.SessionDeleteManyArgs, "where"> = {}
