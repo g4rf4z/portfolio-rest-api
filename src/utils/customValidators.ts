@@ -1,4 +1,3 @@
-// Password complexity validator
 export const validatePasswordComplexity = (
   password: string | undefined,
   passwordComplexity: number
@@ -8,13 +7,7 @@ export const validatePasswordComplexity = (
   const hasLowerCase = /[a-z]/.test(password);
   const hasSpecialCharacters = /\W/.test(password);
   const hasNumbers = /\d/.test(password);
-  const passwordValidation = [
-    hasUpperCase,
-    hasLowerCase,
-    hasSpecialCharacters,
-    hasNumbers,
-  ];
-  if (passwordValidation.filter(Boolean).length >= passwordComplexity)
-    return true;
+  const passwordValidation = [hasUpperCase, hasLowerCase, hasSpecialCharacters, hasNumbers];
+  if (passwordValidation.filter(Boolean).length >= passwordComplexity) return true;
   return false;
 };

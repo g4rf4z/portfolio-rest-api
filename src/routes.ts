@@ -30,10 +30,11 @@ import {
   readAdminSchema,
   readAdminsSchema,
   updateCurrentAdminNameSchema,
+  updateCurrentAdminEmailSchema,
+  updateCurrentAdminPasswordSchema,
   updateAdminRoleSchema,
   disableAdminSchema,
   deleteAdminSchema,
-  updateCurrentAdminEmailSchema,
 } from "./schemas/admin.schema";
 
 import {
@@ -41,10 +42,11 @@ import {
   readAdminController,
   readAdminsController,
   updateCurrentAdminNameController,
+  updateCurrentAdminEmailController,
+  updateCurrentAdminPasswordController,
   updateAdminRoleController,
   disableAdminController,
   deleteAdminController,
-  updateCurrentAdminEmailController,
 } from "./controllers/admin.controller";
 
 import {
@@ -96,11 +98,7 @@ const routes = (app: Express) => {
     [requireAuth("ADMIN"), validateInputs(retrieveSessionsSchema)],
     retrieveSessionsController
   );
-  app.post(
-    "/sessions/:type/login",
-    [validateInputs(loginSchema)],
-    loginController
-  );
+  app.post("/sessions/:type/login", [validateInputs(loginSchema)], loginController);
   app.post(
     "/sessions/:type/logout",
     [requireAuth(), validateInputs(logoutSchema)],
@@ -145,8 +143,8 @@ const routes = (app: Express) => {
   );
   app.patch(
     "/admins/update-password",
-    [requireAuth("ADMIN"), validateInputs(updateCurrentAdminEmailSchema)],
-    updateCurrentAdminEmailController
+    [requireAuth("ADMIN"), validateInputs(updateCurrentAdminPasswordSchema)],
+    updateCurrentAdminPasswordController
   );
   app.patch(
     "/admins/:id/update-role",
@@ -171,11 +169,7 @@ const routes = (app: Express) => {
     createSkillController
   );
   app.get("/skills", [validateInputs(readSkillsSchema)], readSkillsController);
-  app.get(
-    "/skills/:id",
-    [validateInputs(readSkillSchema)],
-    readSkillController
-  );
+  app.get("/skills/:id", [validateInputs(readSkillSchema)], readSkillController);
   app.patch(
     "/skills/:id/update-role",
     [requireAuth("ADMIN"), validateInputs(updateSkillSchema)],
@@ -193,16 +187,8 @@ const routes = (app: Express) => {
     [requireAuth("ADMIN"), validateInputs(createExperienceSchema)],
     createExperienceController
   );
-  app.get(
-    "/experiences",
-    [validateInputs(readExperiencesSchema)],
-    readExperiencesController
-  );
-  app.get(
-    "/experiences/:id",
-    [validateInputs(readExperienceSchema)],
-    readExperienceController
-  );
+  app.get("/experiences", [validateInputs(readExperiencesSchema)], readExperiencesController);
+  app.get("/experiences/:id", [validateInputs(readExperienceSchema)], readExperienceController);
   app.patch(
     "/experiences/:id/update-role",
     [requireAuth("ADMIN"), validateInputs(updateExperienceSchema)],

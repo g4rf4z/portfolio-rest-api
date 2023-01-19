@@ -40,10 +40,7 @@ export const createExperienceController = async (
         tasks: true,
       },
     };
-    const createdExperience = await createExperience(
-      req.body.data,
-      createExperienceOptions
-    );
+    const createdExperience = await createExperience(req.body.data, createExperienceOptions);
     return res.send(createdExperience);
   } catch (error) {
     return handleError(error, res);
@@ -70,10 +67,7 @@ export const readExperienceController = async (
         tasks: true,
       },
     };
-    const foundExperience = await readExperience(
-      req.params,
-      readExperienceOptions
-    );
+    const foundExperience = await readExperience(req.params, readExperienceOptions);
     return res.send(foundExperience);
   } catch (error) {
     return handleError(error, res);
@@ -100,10 +94,7 @@ export const readExperiencesController = async (
         tasks: true,
       },
     };
-    const foundExperiences = await readExperiences(
-      req.body.params,
-      readExperiencesOptions
-    );
+    const foundExperiences = await readExperiences(req.body.params, readExperiencesOptions);
     if (foundExperiences.length === 0) return res.status(204).send();
 
     return res.send(foundExperiences);
@@ -114,11 +105,7 @@ export const readExperiencesController = async (
 
 // ------------------------- UPDATE EXPERIENCE CONTROLLER -------------------------
 export const updateExperienceController = async (
-  req: Request<
-    UpdateExperienceInput["params"],
-    {},
-    UpdateExperienceInput["body"]
-  >,
+  req: Request<UpdateExperienceInput["params"], {}, UpdateExperienceInput["body"]>,
   res: Response
 ) => {
   if (!checkAdminClearance(res, ["SUPERADMIN", "ADMIN"])) return;

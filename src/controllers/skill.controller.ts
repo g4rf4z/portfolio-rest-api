@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { handleError } from "../utils/errors";
 import { checkAdminClearance } from "../utils/checkPermissions";
+import { handleError } from "../utils/errors";
 
 import {
   createSkill,
@@ -148,10 +148,7 @@ export const deleteSkillController = async (
         progress: true,
       },
     };
-    const deletedSkill = await deleteSkill(
-      { id: req.params.id },
-      deleteSkillOptions
-    );
+    const deletedSkill = await deleteSkill({ id: req.params.id }, deleteSkillOptions);
     return res.send(deletedSkill);
   } catch (error) {
     return handleError(error, res);

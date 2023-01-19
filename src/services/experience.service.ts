@@ -2,7 +2,7 @@ import { Prisma } from "@prisma/client";
 import { prisma } from "../utils/prisma";
 import { handlePrismaError } from "../utils/errors";
 
-// ------------------------- CREATE EXPERIENCE SERVICE -------------------------
+// ------------------------- CREATE EXPERIENCE -------------------------
 export const createExperience = async (
   data: Prisma.ExperienceCreateArgs["data"],
   options: Omit<Prisma.ExperienceCreateArgs, "data"> = {}
@@ -14,7 +14,7 @@ export const createExperience = async (
   }
 };
 
-// ------------------------- READ EXPERIENCE SERVICE -------------------------
+// ------------------------- READ EXPERIENCE -------------------------
 export const readExperience = async (
   params: Prisma.ExperienceFindUniqueOrThrowArgs["where"],
   options: Omit<Prisma.ExperienceFindUniqueOrThrowArgs, "where"> = {}
@@ -29,7 +29,7 @@ export const readExperience = async (
   }
 };
 
-// ------------------------- READ EXPERIENCES SERVICE -------------------------
+// ------------------------- READ EXPERIENCES -------------------------
 export const readExperiences = async (
   params: Prisma.ExperienceFindManyArgs["where"],
   options: Omit<Prisma.ExperienceFindManyArgs, "where"> = {}
@@ -41,7 +41,7 @@ export const readExperiences = async (
   }
 };
 
-// ------------------------- UPDATE EXPERIENCE SERVICE -------------------------
+// ------------------------- UPDATE EXPERIENCE -------------------------
 export const updateExperience = async (
   params: Prisma.ExperienceUpdateArgs["where"],
   data: Prisma.ExperienceUpdateArgs["data"],
@@ -58,7 +58,7 @@ export const updateExperience = async (
   }
 };
 
-// ------------------------- DELETE EXPERIENCE SERVICE -------------------------
+// ------------------------- DELETE EXPERIENCE -------------------------
 export const deleteExperience = async (
   params: Prisma.ExperienceDeleteArgs["where"],
   options: Omit<Prisma.ExperienceDeleteArgs, "where">

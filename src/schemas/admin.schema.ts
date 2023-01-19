@@ -106,15 +106,9 @@ export const deleteAdminSchema = object({
 export type CreateAdminInput = TypeOf<typeof createAdminSchema>;
 export type FindAdminInput = TypeOf<typeof readAdminSchema>;
 export type ListAdminsInput = TypeOf<typeof readAdminsSchema>;
-export type UpdateCurrentAdminInput = TypeOf<
-  typeof updateCurrentAdminNameSchema
->;
-export type UpdateCurrentAdminEmailInput = TypeOf<
-  typeof updateCurrentAdminEmailSchema
->;
-export type UpdateCurrentAdminPasswordInput = TypeOf<
-  typeof updateCurrentAdminPasswordSchema
->;
+export type UpdateCurrentAdminNameInput = TypeOf<typeof updateCurrentAdminNameSchema>;
+export type UpdateCurrentAdminEmailInput = TypeOf<typeof updateCurrentAdminEmailSchema>;
+export type UpdateCurrentAdminPasswordInput = TypeOf<typeof updateCurrentAdminPasswordSchema>;
 export type UpdateAdminRoleInput = TypeOf<typeof updateAdminRoleSchema>;
 export type DisableAdminInput = TypeOf<typeof disableAdminSchema>;
 export type DeleteAdminInput = TypeOf<typeof deleteAdminSchema>;

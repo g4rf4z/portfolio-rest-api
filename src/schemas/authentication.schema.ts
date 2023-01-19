@@ -1,12 +1,5 @@
+import { object, string, nativeEnum, boolean, enum as zodEnum, TypeOf } from "zod";
 import { AccountType, AdminRole } from "@prisma/client";
-import {
-  object,
-  string,
-  boolean,
-  TypeOf,
-  enum as zodEnum,
-  nativeEnum,
-} from "zod";
 import { validatePasswordComplexity } from "../utils/customValidators";
 
 const TYPE_VALUES = ["admin", "user"] as const;
