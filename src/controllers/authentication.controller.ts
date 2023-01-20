@@ -1,14 +1,14 @@
-import crypto from "crypto";
+import type { Request, Response } from "express";
+import type { Prisma, AccountType } from "@prisma/client";
+import type { JwtTokenData } from "../utils/jwt.utils";
 
-import {
-  PrismaClientKnownRequestError,
-  PrismaClientUnknownRequestError,
-} from "@prisma/client/runtime";
+import crypto from "crypto";
 
 import { readAdmin, updateAdmin } from "../services/admin.service";
 import { CustomError, handleError } from "../utils/errors";
 import { compareData, hashString } from "../utils/hash.utils";
 import { newAccessToken, newRefreshToken } from "../utils/jwt.utils";
+import { checkAdminClearance } from "../utils/checkPermissions";
 
 import {
   createResetPasswordToken,
@@ -19,36 +19,29 @@ import {
 
 import {
   createSession,
+  readSessions,
+  updateSessions,
   deleteSession,
   deleteSessions,
-  retrieveIsLoggedIn,
-  retrieveSessions,
-  updateSessions,
 } from "../services/session.service";
 
 import type {
-  DeleteSessionInput,
-  DeleteSessionsInput,
+  ReadSessionsInput,
   LoginInput,
   LogoutInput,
   ResetPasswordInput,
-  RetrieveIsLoggedInInput,
-  RetrieveSessionsInput,
   SetPasswordInput,
+  DeleteSessionInput,
+  DeleteInactiveSessionsInput,
 } from "../schemas/authentication.schema";
 
-import type { JwtTokenData } from "../utils/jwt.utils";
-import type { Request, Response } from "express";
-import type { AccountType, Prisma } from "@prisma/client";
-import { checkAdminClearance } from "../utils/checkPermissions";
-
-// ------------------------- RETRIEVE IS LOGGED IN CONTROLLER -------------------------
-export const retrieveIsLoggedInController = async (
-  req: Request<{}, {}, RetrieveIsLoggedInInput["body"]>,
+// ------------------------- CONTROLLER -> FIND OWN SESSION -------------------------
+export const findOwnSessionController = async (
+  req: Request<{}, {}, ReadSessionsInput["body"]>,
   res: Response
 ) => {
   try {
-    const retrieveIsLoggedInOptions = {
+    const findOwnSessionOptions = {
       select: {
         id: true,
         createdAt: true,
@@ -60,29 +53,24 @@ export const retrieveIsLoggedInController = async (
         ownerId: true,
       },
     };
-
-    const retrievedIsLoggedIn = await retrieveIsLoggedIn(
-      {
-        id: res.locals.account.id,
-        isActive: true,
-      },
-      retrieveIsLoggedInOptions
+    const foundOwnSession = await readSessions(
+      { ownerId: res.locals?.account?.id, isActive: true },
+      findOwnSessionOptions
     );
-
-    if (retrievedIsLoggedIn.length === 0) return res.status(204).send();
-    return res.send(retrievedIsLoggedIn);
+    if (foundOwnSession.length === 0) return res.status(204).send();
+    return res.send(foundOwnSession);
   } catch (error) {
     return handleError(error, res);
   }
 };
 
-// ------------------------- RETRIEVE SESSIONS CONTROLLER -------------------------
-export const retrieveSessionsController = async (
-  req: Request<{}, {}, RetrieveSessionsInput["body"]>,
+// ------------------------- CONTROLLER -> FIND OWN SESSIONS HISTORY -------------------------
+export const findOwnSessionsHistoryController = async (
+  req: Request<{}, {}, ReadSessionsInput["body"]>,
   res: Response
 ) => {
   try {
-    const retrieveSessionsOptions = {
+    const findOwnSessionsHistoryOptions = {
       select: {
         id: true,
         createdAt: true,
@@ -94,14 +82,12 @@ export const retrieveSessionsController = async (
         ownerId: true,
       },
     };
-
-    const retrievedSessions = await retrieveSessions(
-      req.params,
-      retrieveSessionsOptions
+    const foundOwnSessionsHistory = await readSessions(
+      { ownerId: res.locals?.account?.id },
+      findOwnSessionsHistoryOptions
     );
-
-    if (retrievedSessions.length === 0) return res.status(204).send();
-    return res.send(retrievedSessions);
+    if (foundOwnSessionsHistory.length === 0) return res.status(204).send();
+    return res.send(foundOwnSessionsHistory);
   } catch (error) {
     return handleError(error, res);
   }
@@ -341,7 +327,7 @@ export const setNewPasswordController = async (
   }
 };
 
-// ------------------------- DELETE SESSION CONTROLLER -------------------------
+// ------------------------- CONTROLLER -> DELETE SESSION BY ID -------------------------
 export const deleteSessionController = async (
   req: Request<DeleteSessionInput["params"], {}, {}>,
   res: Response
@@ -361,31 +347,26 @@ export const deleteSessionController = async (
         ownerId: true,
       },
     };
-
     const deletedSession = await deleteSession(
       { id: req.params.id },
       deleteSessionOptions
     );
-
     return res.send(deletedSession);
   } catch (error) {
     return handleError(error, res);
   }
 };
 
-// ------------------------- DELETE SESSIONS CONTROLLER -------------------------
-export const deleteSessionsController = async (
-  req: Request<DeleteSessionsInput["params"], {}, {}>,
+// ------------------------- CONTROLLER -> DELETE ALL INACTIVE SESSIONS -------------------------
+export const deleteInactiveSessionsController = async (
+  req: Request<DeleteInactiveSessionsInput["params"], {}, {}>,
   res: Response
 ) => {
   try {
     if (!checkAdminClearance(res, ["SUPERADMIN", "ADMIN"])) return;
 
-    const deletedSessions = await deleteSessions({
-      isActive: false,
-    });
-
-    return res.send(deletedSessions);
+    const deletedInactiveSessions = await deleteSessions({ isActive: false });
+    return res.send(deletedInactiveSessions);
   } catch (error) {
     return handleError(error, res);
   }

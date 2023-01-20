@@ -2,7 +2,7 @@ import { Prisma } from "@prisma/client";
 import { prisma } from "../utils/prisma";
 import { handlePrismaError } from "../utils/errors";
 
-// ------------------------- CREATE SESSION -------------------------
+// ------------------------- SERVICE -> CREATE SESSION -------------------------
 export const createSession = async (
   data: Prisma.SessionCreateArgs["data"],
   options: Omit<Prisma.SessionCreateArgs, "data"> = {}
@@ -14,8 +14,8 @@ export const createSession = async (
   }
 };
 
-// ------------------------- READ IS LOGGED IN -------------------------
-export const retrieveIsLoggedIn = async (
+// ------------------------- SERVICE -> READ SESSIONS -------------------------
+export const readSessions = async (
   params: Prisma.SessionFindManyArgs["where"],
   options: Omit<Prisma.SessionFindManyArgs, "where"> = {}
 ) => {
@@ -26,44 +26,7 @@ export const retrieveIsLoggedIn = async (
   }
 };
 
-// ------------------------- READ SESSION -------------------------
-export const findSession = async (
-  params: Prisma.SessionFindUniqueOrThrowArgs["where"],
-  options: Omit<Prisma.SessionFindUniqueOrThrowArgs, "where"> = {}
-) => {
-  try {
-    return await prisma.session.findFirstOrThrow({ where: params, ...options });
-  } catch (error) {
-    throw handlePrismaError(error, "session");
-  }
-};
-
-// ------------------------- READ SESSIONS -------------------------
-export const retrieveSessions = async (
-  params: Prisma.SessionFindManyArgs["where"],
-  options: Omit<Prisma.SessionFindManyArgs, "where"> = {}
-) => {
-  try {
-    return await prisma.session.findMany({ where: params, ...options });
-  } catch (error) {
-    throw handlePrismaError(error, "session");
-  }
-};
-
-// ------------------------- UPDATE SESSION -------------------------
-export const updateSession = async (
-  params: Prisma.SessionUpdateArgs["where"],
-  data: Prisma.SessionUpdateArgs["data"],
-  options: Omit<Prisma.SessionUpdateArgs, "where" | "data">
-) => {
-  try {
-    return await prisma.session.update({ where: params, data, ...options });
-  } catch (error) {
-    throw handlePrismaError(error, "session");
-  }
-};
-
-// ------------------------- UPDATE SESSIONS -------------------------
+// ------------------------- SERVICE -> UPDATE SESSIONS -------------------------
 export const updateSessions = async (
   params: Prisma.SessionUpdateManyArgs["where"],
   data: Prisma.SessionUpdateManyArgs["data"]
@@ -75,7 +38,7 @@ export const updateSessions = async (
   }
 };
 
-// ------------------------- DELETE SESSION -------------------------
+// ------------------------- SERVICE -> DELETE SESSION -------------------------
 export const deleteSession = async (
   params: Prisma.SessionDeleteArgs["where"],
   options: Omit<Prisma.SessionDeleteArgs, "where">
@@ -87,7 +50,7 @@ export const deleteSession = async (
   }
 };
 
-// ------------------------- DELETE SESSIONS -------------------------
+// ------------------------- SERVICE -> DELETE SESSIONS -------------------------
 export const deleteSessions = async (
   params: Prisma.SessionDeleteManyArgs["where"],
   options: Omit<Prisma.SessionDeleteManyArgs, "where"> = {}

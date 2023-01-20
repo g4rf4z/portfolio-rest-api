@@ -1,11 +1,18 @@
-import { object, string, nativeEnum, boolean, enum as zodEnum, TypeOf } from "zod";
 import { AccountType, AdminRole } from "@prisma/client";
+import {
+  object,
+  string,
+  boolean,
+  TypeOf,
+  enum as zodEnum,
+  nativeEnum,
+} from "zod";
 import { validatePasswordComplexity } from "../utils/customValidators";
 
 const TYPE_VALUES = ["admin", "user"] as const;
 
-// ------------------------- READ IS LOGGED IN SCHEMA -------------------------
-export const retrieveIsLoggedInSchema = object({
+// ------------------------- SCHEMA -> READ SESSIONS -------------------------
+export const readSessionsSchema = object({
   body: object({
     params: object({
       id: string().optional(),
@@ -20,23 +27,7 @@ export const retrieveIsLoggedInSchema = object({
   }).strict(),
 });
 
-// ------------------------- RETRIEVE SESSIONS SCHEMA -------------------------
-export const retrieveSessionsSchema = object({
-  body: object({
-    params: object({
-      id: string().optional(),
-      type: nativeEnum(AccountType).optional(),
-      isActive: boolean().optional(),
-      userAgent: string().optional(),
-      admin: nativeEnum(AdminRole).optional(),
-      ownerId: string().optional(),
-    })
-      .strict()
-      .optional(),
-  }).strict(),
-});
-
-// ------------------------- LOGIN SCHEMA -------------------------
+// ------------------------- SCHEMA -> LOGIN -------------------------
 export const loginSchema = object({
   params: object({
     type: zodEnum(TYPE_VALUES),
@@ -49,14 +40,14 @@ export const loginSchema = object({
   }).strict(),
 });
 
-// ------------------------- LOGOUT SCHEMA -------------------------
+// ------------------------- SCHEMA -> LOGOUT -------------------------
 export const logoutSchema = object({
   params: object({
     type: zodEnum(TYPE_VALUES),
   }).strict(),
 });
 
-// ------------------------- RESET PASSWORD -------------------------
+// ------------------------- SCHEMA -> RESET PASSWORD -------------------------
 export const resetPasswordSchema = object({
   params: object({
     type: zodEnum(TYPE_VALUES),
@@ -68,7 +59,7 @@ export const resetPasswordSchema = object({
   }).strict(),
 });
 
-// ------------------------- SET PASSWORD -------------------------
+// ------------------------- SCHEMA -> SET PASSWORD -------------------------
 export const setPasswordSchema = object({
   params: object({
     type: zodEnum(TYPE_VALUES),
@@ -86,26 +77,26 @@ export const setPasswordSchema = object({
   }).strict(),
 });
 
-// ------------------------- DELETE SESSION SCHEMA -------------------------
+// ------------------------- SCHEMA -> DELETE SESSION BY ID -------------------------
 export const deleteSessionSchema = object({
   params: object({
     id: string(),
   }).strict(),
 });
 
-// ------------------------- DELETE SESSIONS SCHEMA -------------------------
-export const deleteSessionsSchema = object({
+// ------------------------- SCHEMA -> DELETE ALL INACTIVE SESSIONS -------------------------
+export const deleteInactiveSessionsSchema = object({
   params: object({
     isActive: boolean().optional(),
   }).strict(),
 });
 
-// ------------------------- EXPORTS -------------------------
-export type RetrieveIsLoggedInInput = TypeOf<typeof retrieveIsLoggedInSchema>;
-export type RetrieveSessionsInput = TypeOf<typeof retrieveSessionsSchema>;
+export type ReadSessionsInput = TypeOf<typeof readSessionsSchema>;
 export type LoginInput = TypeOf<typeof loginSchema>;
 export type LogoutInput = TypeOf<typeof logoutSchema>;
 export type ResetPasswordInput = TypeOf<typeof resetPasswordSchema>;
 export type SetPasswordInput = TypeOf<typeof setPasswordSchema>;
 export type DeleteSessionInput = TypeOf<typeof deleteSessionSchema>;
-export type DeleteSessionsInput = TypeOf<typeof deleteSessionsSchema>;
+export type DeleteInactiveSessionsInput = TypeOf<
+  typeof deleteInactiveSessionsSchema
+>;

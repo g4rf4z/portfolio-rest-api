@@ -122,15 +122,9 @@ export const updateCurrentAdminNameController = async (
   try {
     const updateAdminOptions = {
       select: {
-        id: true,
-        createdAt: true,
-        updatedAt: true,
         firstname: true,
         lastname: true,
         nickname: true,
-        email: true,
-        role: true,
-        isActive: true,
       },
     };
     const updatedAdmin = await updateAdmin(
@@ -206,7 +200,11 @@ export const updateCurrentAdminPasswordController = async (
 
 // ------------------------- UPDATE ADMIN ROLE CONTROLLER -------------------------
 export const updateAdminRoleController = async (
-  req: Request<UpdateAdminRoleInput["params"], {}, UpdateAdminRoleInput["body"]>,
+  req: Request<
+    UpdateAdminRoleInput["params"],
+    {},
+    UpdateAdminRoleInput["body"]
+  >,
   res: Response
 ) => {
   if (!checkAdminClearance(res, ["SUPERADMIN", "ADMIN"])) return;
@@ -310,7 +308,10 @@ export const deleteAdminController = async (
       }
     }
 
-    const deletedAdmin = await deleteAdmin({ id: req.params.id }, deleteAdminOptions);
+    const deletedAdmin = await deleteAdmin(
+      { id: req.params.id },
+      deleteAdminOptions
+    );
     return res.send(deletedAdmin);
   } catch (error) {
     return handleError(error, res);

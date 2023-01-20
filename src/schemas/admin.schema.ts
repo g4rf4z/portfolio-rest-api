@@ -47,8 +47,8 @@ export const readAdminsSchema = object({
 export const updateCurrentAdminNameSchema = object({
   body: object({
     data: object({
-      firstname: string().optional(),
       lastname: string().optional(),
+      firstname: string().optional(),
       nickname: string().optional(),
     }).strict(),
   }).strict(),
@@ -106,9 +106,15 @@ export const deleteAdminSchema = object({
 export type CreateAdminInput = TypeOf<typeof createAdminSchema>;
 export type FindAdminInput = TypeOf<typeof readAdminSchema>;
 export type ListAdminsInput = TypeOf<typeof readAdminsSchema>;
-export type UpdateCurrentAdminNameInput = TypeOf<typeof updateCurrentAdminNameSchema>;
-export type UpdateCurrentAdminEmailInput = TypeOf<typeof updateCurrentAdminEmailSchema>;
-export type UpdateCurrentAdminPasswordInput = TypeOf<typeof updateCurrentAdminPasswordSchema>;
+export type UpdateCurrentAdminNameInput = TypeOf<
+  typeof updateCurrentAdminNameSchema
+>;
+export type UpdateCurrentAdminEmailInput = TypeOf<
+  typeof updateCurrentAdminEmailSchema
+>;
+export type UpdateCurrentAdminPasswordInput = TypeOf<
+  typeof updateCurrentAdminPasswordSchema
+>;
 export type UpdateAdminRoleInput = TypeOf<typeof updateAdminRoleSchema>;
 export type DisableAdminInput = TypeOf<typeof disableAdminSchema>;
 export type DeleteAdminInput = TypeOf<typeof deleteAdminSchema>;

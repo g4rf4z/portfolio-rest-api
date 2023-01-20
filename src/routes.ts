@@ -4,25 +4,24 @@ import { requireAuth } from "./middlewares/requireAuthentication";
 import validateInputs from "./middlewares/validateInputs";
 
 import {
-  deleteSessionSchema,
-  deleteSessionsSchema,
+  readSessionsSchema,
   loginSchema,
   logoutSchema,
   resetPasswordSchema,
-  retrieveIsLoggedInSchema,
-  retrieveSessionsSchema,
   setPasswordSchema,
+  deleteSessionSchema,
+  deleteInactiveSessionsSchema,
 } from "./schemas/authentication.schema";
 
 import {
-  deleteSessionController,
-  deleteSessionsController,
+  findOwnSessionController,
+  findOwnSessionsHistoryController,
   loginController,
   logoutController,
   resetPasswordController,
-  retrieveIsLoggedInController,
-  retrieveSessionsController,
   setNewPasswordController,
+  deleteSessionController,
+  deleteInactiveSessionsController,
 } from "./controllers/authentication.controller";
 
 import {
@@ -89,16 +88,20 @@ const routes = (app: Express) => {
 
   // ------------------------- SESSIONS -------------------------
   app.get(
-    "/sessions/is-logged-in",
-    [requireAuth("ADMIN"), validateInputs(retrieveIsLoggedInSchema)],
-    retrieveIsLoggedInController
+    "/sessions/own-session",
+    [requireAuth("ADMIN"), validateInputs(readSessionsSchema)],
+    findOwnSessionController
   );
   app.get(
-    "/sessions/sessions",
-    [requireAuth("ADMIN"), validateInputs(retrieveSessionsSchema)],
-    retrieveSessionsController
+    "/sessions/own-sessions-history",
+    [requireAuth("ADMIN"), validateInputs(readSessionsSchema)],
+    findOwnSessionsHistoryController
   );
-  app.post("/sessions/:type/login", [validateInputs(loginSchema)], loginController);
+  app.post(
+    "/sessions/:type/login",
+    [validateInputs(loginSchema)],
+    loginController
+  );
   app.post(
     "/sessions/:type/logout",
     [requireAuth(), validateInputs(logoutSchema)],
@@ -111,8 +114,8 @@ const routes = (app: Express) => {
   );
   app.delete(
     "/sessions",
-    [requireAuth("ADMIN"), validateInputs(deleteSessionsSchema)],
-    deleteSessionsController
+    [requireAuth("ADMIN"), validateInputs(deleteInactiveSessionsSchema)],
+    deleteInactiveSessionsController
   );
 
   // ------------------------- ADMINS -------------------------
@@ -132,7 +135,7 @@ const routes = (app: Express) => {
     readAdminsController
   );
   app.patch(
-    "/admins/update-name",
+    "/admins/updateAdminProfile",
     [requireAuth("ADMIN"), validateInputs(updateCurrentAdminNameSchema)],
     updateCurrentAdminNameController
   );
@@ -169,7 +172,11 @@ const routes = (app: Express) => {
     createSkillController
   );
   app.get("/skills", [validateInputs(readSkillsSchema)], readSkillsController);
-  app.get("/skills/:id", [validateInputs(readSkillSchema)], readSkillController);
+  app.get(
+    "/skills/:id",
+    [validateInputs(readSkillSchema)],
+    readSkillController
+  );
   app.patch(
     "/skills/:id/update-role",
     [requireAuth("ADMIN"), validateInputs(updateSkillSchema)],
@@ -187,8 +194,16 @@ const routes = (app: Express) => {
     [requireAuth("ADMIN"), validateInputs(createExperienceSchema)],
     createExperienceController
   );
-  app.get("/experiences", [validateInputs(readExperiencesSchema)], readExperiencesController);
-  app.get("/experiences/:id", [validateInputs(readExperienceSchema)], readExperienceController);
+  app.get(
+    "/experiences",
+    [validateInputs(readExperiencesSchema)],
+    readExperiencesController
+  );
+  app.get(
+    "/experiences/:id",
+    [validateInputs(readExperienceSchema)],
+    readExperienceController
+  );
   app.patch(
     "/experiences/:id/update-role",
     [requireAuth("ADMIN"), validateInputs(updateExperienceSchema)],
