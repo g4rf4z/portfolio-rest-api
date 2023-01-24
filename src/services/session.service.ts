@@ -14,6 +14,18 @@ export const createSession = async (
   }
 };
 
+// ------------------------- SERVICE -> READ SESSION -------------------------
+export const readSession = async (
+  params: Prisma.SessionFindFirstOrThrowArgs["where"],
+  options: Omit<Prisma.SessionFindFirstOrThrowArgs, "where"> = {}
+) => {
+  try {
+    return await prisma.session.findFirstOrThrow({ where: params, ...options });
+  } catch (error) {
+    throw handlePrismaError(error, "session");
+  }
+};
+
 // ------------------------- SERVICE -> READ SESSIONS -------------------------
 export const readSessions = async (
   params: Prisma.SessionFindManyArgs["where"],

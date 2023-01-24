@@ -88,12 +88,12 @@ const routes = (app: Express) => {
 
   // ------------------------- SESSIONS -------------------------
   app.get(
-    "/sessions/own-session",
+    "/sessions/getCurrentSession",
     [requireAuth("ADMIN"), validateInputs(readSessionsSchema)],
     findOwnSessionController
   );
   app.get(
-    "/sessions/own-sessions-history",
+    "/sessions/getSessionHistory",
     [requireAuth("ADMIN"), validateInputs(readSessionsSchema)],
     findOwnSessionsHistoryController
   );

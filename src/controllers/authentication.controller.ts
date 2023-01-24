@@ -23,6 +23,7 @@ import {
   updateSessions,
   deleteSession,
   deleteSessions,
+  readSession,
 } from "../services/session.service";
 
 import type {
@@ -53,11 +54,11 @@ export const findOwnSessionController = async (
         ownerId: true,
       },
     };
-    const foundOwnSession = await readSessions(
+    const foundOwnSession = await readSession(
       { ownerId: res.locals?.account?.id, isActive: true },
       findOwnSessionOptions
     );
-    if (foundOwnSession.length === 0) return res.status(204).send();
+
     return res.send(foundOwnSession);
   } catch (error) {
     return handleError(error, res);
@@ -115,10 +116,7 @@ export const loginController = async (
     }
 
     // check password match
-    const passwordsMatch = await compareData(
-      foundOwner.password,
-      req.body.data.password
-    );
+    const passwordsMatch = await compareData(foundOwner.password, req.body.data.password);
 
     if (!passwordsMatch) {
       throw badCredentials;
@@ -143,10 +141,7 @@ export const loginController = async (
         admin: true,
       },
     };
-    const createdSession = await createSession(
-      createSessionData,
-      createdSessionOptions
-    );
+    const createdSession = await createSession(createSessionData, createdSessionOptions);
 
     // revoke all active sessions
     updateSessions(
@@ -251,10 +246,7 @@ export const resetPasswordController = async (
 
     // invalidate previous reset password tokens
     const accountType: AccountType = "ADMIN";
-    await updateResetPasswordTokens(
-      { id: foundAccount.id, type: accountType },
-      { isValid: false }
-    );
+    await updateResetPasswordTokens({ id: foundAccount.id, type: accountType }, { isValid: false });
 
     // generate reset password token and save it
     let token = crypto.randomBytes(32).toString("hex");
@@ -316,10 +308,7 @@ export const setNewPasswordController = async (
     delete req.body.data.passwordConfirmation;
 
     // set new password
-    await updateAdmin(
-      { id: req.params.id },
-      { password: req.body.data.password }
-    );
+    await updateAdmin({ id: req.params.id }, { password: req.body.data.password });
 
     return res.status(200).send({ message: "Successfully updated password" });
   } catch (error) {
@@ -347,10 +336,7 @@ export const deleteSessionController = async (
         ownerId: true,
       },
     };
-    const deletedSession = await deleteSession(
-      { id: req.params.id },
-      deleteSessionOptions
-    );
+    const deletedSession = await deleteSession({ id: req.params.id }, deleteSessionOptions);
     return res.send(deletedSession);
   } catch (error) {
     return handleError(error, res);
