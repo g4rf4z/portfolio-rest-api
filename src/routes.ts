@@ -88,12 +88,12 @@ const routes = (app: Express) => {
 
   // ------------------------- SESSIONS -------------------------
   app.get(
-    "/sessions/getCurrentSession",
+    "/session",
     [requireAuth("ADMIN"), validateInputs(readSessionsSchema)],
     findOwnSessionController
   );
   app.get(
-    "/sessions/getSessionHistory",
+    "/sessions",
     [requireAuth("ADMIN"), validateInputs(readSessionsSchema)],
     findOwnSessionsHistoryController
   );
@@ -113,7 +113,7 @@ const routes = (app: Express) => {
     deleteSessionController
   );
   app.delete(
-    "/sessions",
+    "/inactive-sessions",
     [requireAuth("ADMIN"), validateInputs(deleteInactiveSessionsSchema)],
     deleteInactiveSessionsController
   );
@@ -135,7 +135,7 @@ const routes = (app: Express) => {
     readAdminsController
   );
   app.patch(
-    "/admins/updateAdminProfile",
+    "/admins/update-profile",
     [requireAuth("ADMIN"), validateInputs(updateCurrentAdminNameSchema)],
     updateCurrentAdminNameController
   );

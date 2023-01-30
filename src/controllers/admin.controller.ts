@@ -146,15 +146,7 @@ export const updateCurrentAdminEmailController = async (
   try {
     const updateAdminOptions = {
       select: {
-        id: true,
-        createdAt: true,
-        updatedAt: true,
-        firstname: true,
-        lastname: true,
-        nickname: true,
         email: true,
-        role: true,
-        isActive: true,
       },
     };
     const updatedAdmin = await updateAdmin(
