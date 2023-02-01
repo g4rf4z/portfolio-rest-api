@@ -1,7 +1,6 @@
 import { Express } from "express";
-import { requireAuth } from "./middlewares/requireAuthentication";
 
-import validateInputs from "./middlewares/validateInputs";
+import { requireAuth } from "./middlewares/requireAuthentication";
 
 import {
   readSessionsSchema,
@@ -12,7 +11,6 @@ import {
   deleteSessionSchema,
   deleteInactiveSessionsSchema,
 } from "./schemas/authentication.schema";
-
 import {
   findOwnSessionController,
   findOwnSessionsHistoryController,
@@ -35,7 +33,6 @@ import {
   disableAdminSchema,
   deleteAdminSchema,
 } from "./schemas/admin.schema";
-
 import {
   createAdminController,
   readAdminController,
@@ -55,7 +52,6 @@ import {
   updateSkillSchema,
   deleteSkillSchema,
 } from "./schemas/skill.schema";
-
 import {
   createSkillController,
   readSkillController,
@@ -71,7 +67,6 @@ import {
   updateExperienceSchema,
   deleteExperienceSchema,
 } from "./schemas/experience.schema";
-
 import {
   createExperienceController,
   readExperienceController,
@@ -80,12 +75,9 @@ import {
   deleteExperienceController,
 } from "./controllers/experience.controller";
 
-const routes = (app: Express) => {
-  // ------------------------- HEALTH CHECK -------------------------
-  app.get("/", (req, res) => {
-    return res.send({ message: "portfolio-rest-api is working" });
-  });
+import validateInputs from "./middlewares/validateInputs";
 
+const routes = (app: Express) => {
   // ------------------------- SESSIONS -------------------------
   app.get(
     "/session",
@@ -171,14 +163,14 @@ const routes = (app: Express) => {
     [requireAuth("ADMIN"), validateInputs(createSkillSchema)],
     createSkillController
   );
-  app.get("/skills", [validateInputs(readSkillsSchema)], readSkillsController);
   app.get(
     "/skills/:id",
     [validateInputs(readSkillSchema)],
     readSkillController
   );
+  app.get("/skills", [validateInputs(readSkillsSchema)], readSkillsController);
   app.patch(
-    "/skills/:id/update-role",
+    "/skills/:id",
     [requireAuth("ADMIN"), validateInputs(updateSkillSchema)],
     updateSkillController
   );
@@ -195,17 +187,17 @@ const routes = (app: Express) => {
     createExperienceController
   );
   app.get(
-    "/experiences",
-    [validateInputs(readExperiencesSchema)],
-    readExperiencesController
-  );
-  app.get(
     "/experiences/:id",
     [validateInputs(readExperienceSchema)],
     readExperienceController
   );
+  app.get(
+    "/experiences",
+    [validateInputs(readExperiencesSchema)],
+    readExperiencesController
+  );
   app.patch(
-    "/experiences/:id/update-role",
+    "/experiences/:id",
     [requireAuth("ADMIN"), validateInputs(updateExperienceSchema)],
     updateExperienceController
   );
