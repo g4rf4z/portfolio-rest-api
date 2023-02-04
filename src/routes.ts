@@ -5,7 +5,6 @@ import { requireAuth } from "./middlewares/requireAuthentication";
 import {
   readSessionsSchema,
   loginSchema,
-  logoutSchema,
   resetPasswordSchema,
   setPasswordSchema,
   deleteSessionSchema,
@@ -89,16 +88,8 @@ const routes = (app: Express) => {
     [requireAuth("ADMIN"), validateInputs(readSessionsSchema)],
     findOwnSessionsHistoryController
   );
-  app.post(
-    "/sessions/:type/login",
-    [validateInputs(loginSchema)],
-    loginController
-  );
-  app.post(
-    "/sessions/:type/logout",
-    [requireAuth(), validateInputs(logoutSchema)],
-    logoutController
-  );
+  app.post("/sessions/login", [validateInputs(loginSchema)], loginController);
+  app.post("/sessions/logout", [requireAuth("ADMIN")], logoutController);
   app.delete(
     "/sessions/:id",
     [requireAuth("ADMIN"), validateInputs(deleteSessionSchema)],

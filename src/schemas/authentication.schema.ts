@@ -29,21 +29,11 @@ export const readSessionsSchema = object({
 
 // ------------------------- SCHEMA -> LOGIN -------------------------
 export const loginSchema = object({
-  params: object({
-    type: zodEnum(TYPE_VALUES),
-  }).strict(),
   body: object({
     data: object({
       email: string(),
       password: string(),
     }).strict(),
-  }).strict(),
-});
-
-// ------------------------- SCHEMA -> LOGOUT -------------------------
-export const logoutSchema = object({
-  params: object({
-    type: zodEnum(TYPE_VALUES),
   }).strict(),
 });
 
@@ -93,7 +83,6 @@ export const deleteInactiveSessionsSchema = object({
 
 export type ReadSessionsInput = TypeOf<typeof readSessionsSchema>;
 export type LoginInput = TypeOf<typeof loginSchema>;
-export type LogoutInput = TypeOf<typeof logoutSchema>;
 export type ResetPasswordInput = TypeOf<typeof resetPasswordSchema>;
 export type SetPasswordInput = TypeOf<typeof setPasswordSchema>;
 export type DeleteSessionInput = TypeOf<typeof deleteSessionSchema>;

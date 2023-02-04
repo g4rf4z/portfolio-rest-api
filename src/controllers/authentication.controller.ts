@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import type { Prisma, AccountType } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 import type { JwtTokenData } from "../utils/jwt.utils";
 
 import crypto from "crypto";
@@ -29,7 +29,6 @@ import {
 import type {
   ReadSessionsInput,
   LoginInput,
-  LogoutInput,
   ResetPasswordInput,
   SetPasswordInput,
   DeleteSessionInput,
@@ -96,7 +95,7 @@ export const findOwnSessionsHistoryController = async (
 
 // ------------------------- LOGIN CONTROLLER -------------------------
 export const loginController = async (
-  req: Request<LoginInput["params"], {}, LoginInput["body"]>,
+  req: Request<{}, {}, LoginInput["body"]>,
   res: Response
 ) => {
   try {
@@ -126,11 +125,9 @@ export const loginController = async (
     }
 
     // create a new session
-    const accountType = req.params.type === "admin" ? "ADMIN" : "USER";
     const createSessionData: Prisma.SessionCreateInput = {
       userAgent: req.get("user-agent") || null,
-      type: accountType,
-      [req.params.type]: {
+      admin: {
         connect: { id: foundOwner.id },
       },
     };
@@ -154,7 +151,6 @@ export const loginController = async (
       {
         ownerId: foundOwner.id,
         isActive: true,
-        type: accountType,
         NOT: { id: createdSession.id },
       },
       { isActive: false }
@@ -162,7 +158,6 @@ export const loginController = async (
 
     // generate tokens
     const tokenData: JwtTokenData = {
-      type: accountType,
       account: {
         id: foundOwner.id,
         firstname: foundOwner.firstname,
@@ -202,16 +197,12 @@ export const loginController = async (
 };
 
 // ------------------------- LOGOUT CONTROLLER -------------------------
-export const logoutController = async (
-  req: Request<LogoutInput["params"], {}, {}>,
-  res: Response
-) => {
+export const logoutController = async (req: Request, res: Response) => {
   try {
     // revoke all active sessions
-    const accountType = req.params.type === "admin" ? "ADMIN" : "USER";
     res.locals = {};
     updateSessions(
-      { ownerId: res.locals?.account?.id, isActive: true, type: accountType },
+      { ownerId: res.locals?.account?.id, isActive: true },
       { isActive: false }
     );
 
@@ -251,9 +242,8 @@ export const resetPasswordController = async (
     foundAccount = await readAdmin(foundAccountParams);
 
     // invalidate previous reset password tokens
-    const accountType: AccountType = "ADMIN";
     await updateResetPasswordTokens(
-      { id: foundAccount.id, type: accountType },
+      { id: foundAccount.id },
       { isValid: false }
     );
 
@@ -262,7 +252,6 @@ export const resetPasswordController = async (
     const tokenHash = await hashString(token);
     const createTokenData = {
       expiresAt: new Date(new Date().getTime() + 5 * 60000), // expires in 3 minutes
-      type: accountType,
       token: tokenHash,
       ownerId: foundAccount.id,
     };
@@ -291,12 +280,10 @@ export const setNewPasswordController = async (
   res: Response
 ) => {
   try {
-    const accountType = req.params.type === "admin" ? "ADMIN" : "USER";
     let foundToken;
     try {
       foundToken = await findResetPasswordToken({
         ownerId: req.params.id,
-        type: accountType,
         isValid: true,
         expiresAt: {
           gte: new Date(),
