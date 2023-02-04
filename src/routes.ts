@@ -77,21 +77,25 @@ import {
 import validateInputs from "./middlewares/validateInputs";
 
 const routes = (app: Express) => {
-  // ------------------------- SESSIONS -------------------------
+  // ------------------------- AUTHENTICATION -------------------------
   app.get(
-    "/session",
+    "/authentication/session",
     [requireAuth, validateInputs(readSessionsSchema)],
     findOwnSessionController
   );
   app.get(
-    "/sessions",
+    "/authentication/sessions",
     [requireAuth, validateInputs(readSessionsSchema)],
     findOwnSessionsHistoryController
   );
-  app.post("/sessions/login", [validateInputs(loginSchema)], loginController);
-  app.post("/sessions/logout", requireAuth, logoutController);
+  app.post(
+    "/authentication/login",
+    [validateInputs(loginSchema)],
+    loginController
+  );
+  app.post("/authentication/logout", requireAuth, logoutController);
   app.delete(
-    "/inactive-sessions",
+    "/authentication/inactive-sessions",
     [requireAuth, validateInputs(deleteInactiveSessionsSchema)],
     deleteInactiveSessionsController
   );
