@@ -1,4 +1,4 @@
-import { AccountType, AdminRole } from "@prisma/client";
+import { AdminRole } from "@prisma/client";
 import {
   object,
   string,
@@ -16,7 +16,6 @@ export const readSessionsSchema = object({
   body: object({
     params: object({
       id: string().optional(),
-      type: nativeEnum(AccountType).optional(),
       isActive: boolean().optional(),
       userAgent: string().optional(),
       admin: nativeEnum(AdminRole).optional(),

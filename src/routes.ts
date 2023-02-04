@@ -80,78 +80,73 @@ const routes = (app: Express) => {
   // ------------------------- SESSIONS -------------------------
   app.get(
     "/session",
-    [requireAuth("ADMIN"), validateInputs(readSessionsSchema)],
+    [requireAuth, validateInputs(readSessionsSchema)],
     findOwnSessionController
   );
   app.get(
     "/sessions",
-    [requireAuth("ADMIN"), validateInputs(readSessionsSchema)],
+    [requireAuth, validateInputs(readSessionsSchema)],
     findOwnSessionsHistoryController
   );
   app.post("/sessions/login", [validateInputs(loginSchema)], loginController);
-  app.post("/sessions/logout", [requireAuth("ADMIN")], logoutController);
-  app.delete(
-    "/sessions/:id",
-    [requireAuth("ADMIN"), validateInputs(deleteSessionSchema)],
-    deleteSessionController
-  );
+  app.post("/sessions/logout", requireAuth, logoutController);
   app.delete(
     "/inactive-sessions",
-    [requireAuth("ADMIN"), validateInputs(deleteInactiveSessionsSchema)],
+    [requireAuth, validateInputs(deleteInactiveSessionsSchema)],
     deleteInactiveSessionsController
   );
 
   // ------------------------- ADMINS -------------------------
   app.post(
     "/admins",
-    [requireAuth("ADMIN"), validateInputs(createAdminSchema)],
+    [requireAuth, validateInputs(createAdminSchema)],
     createAdminController
   );
   app.get(
     "/admins/:id",
-    [requireAuth("ADMIN"), validateInputs(readAdminSchema)],
+    [requireAuth, validateInputs(readAdminSchema)],
     readAdminController
   );
   app.get(
     "/admins",
-    [requireAuth("ADMIN"), validateInputs(readAdminsSchema)],
+    [requireAuth, validateInputs(readAdminsSchema)],
     readAdminsController
   );
   app.patch(
     "/admins/update-profile",
-    [requireAuth("ADMIN"), validateInputs(updateCurrentAdminNameSchema)],
+    [requireAuth, validateInputs(updateCurrentAdminNameSchema)],
     updateCurrentAdminNameController
   );
   app.patch(
     "/admins/update-email",
-    [requireAuth("ADMIN"), validateInputs(updateCurrentAdminEmailSchema)],
+    [requireAuth, validateInputs(updateCurrentAdminEmailSchema)],
     updateCurrentAdminEmailController
   );
   app.patch(
     "/admins/update-password",
-    [requireAuth("ADMIN"), validateInputs(updateCurrentAdminPasswordSchema)],
+    [requireAuth, validateInputs(updateCurrentAdminPasswordSchema)],
     updateCurrentAdminPasswordController
   );
   app.patch(
     "/admins/:id/update-role",
-    [requireAuth("ADMIN"), validateInputs(updateAdminRoleSchema)],
+    [requireAuth, validateInputs(updateAdminRoleSchema)],
     updateAdminRoleController
   );
   app.patch(
     "/admins/:id/disable",
-    [requireAuth("ADMIN"), validateInputs(disableAdminSchema)],
+    [requireAuth, validateInputs(disableAdminSchema)],
     disableAdminController
   );
   app.delete(
     "/admins/:id",
-    [requireAuth("ADMIN"), validateInputs(deleteAdminSchema)],
+    [requireAuth, validateInputs(deleteAdminSchema)],
     deleteAdminController
   );
 
   // ------------------------- SKILLS -------------------------
   app.post(
     "/skills",
-    [requireAuth("ADMIN"), validateInputs(createSkillSchema)],
+    [requireAuth, validateInputs(createSkillSchema)],
     createSkillController
   );
   app.get(
@@ -162,19 +157,19 @@ const routes = (app: Express) => {
   app.get("/skills", [validateInputs(readSkillsSchema)], readSkillsController);
   app.patch(
     "/skills/:id",
-    [requireAuth("ADMIN"), validateInputs(updateSkillSchema)],
+    [requireAuth, validateInputs(updateSkillSchema)],
     updateSkillController
   );
   app.delete(
     "/skills/:id",
-    [requireAuth("ADMIN"), validateInputs(deleteSkillSchema)],
+    [requireAuth, validateInputs(deleteSkillSchema)],
     deleteSkillController
   );
 
   // ------------------------- EXPERIENCES -------------------------
   app.post(
     "/experiences",
-    [requireAuth("ADMIN"), validateInputs(createExperienceSchema)],
+    [requireAuth, validateInputs(createExperienceSchema)],
     createExperienceController
   );
   app.get(
@@ -189,12 +184,12 @@ const routes = (app: Express) => {
   );
   app.patch(
     "/experiences/:id",
-    [requireAuth("ADMIN"), validateInputs(updateExperienceSchema)],
+    [requireAuth, validateInputs(updateExperienceSchema)],
     updateExperienceController
   );
   app.delete(
     "/experiences/:id",
-    [requireAuth("ADMIN"), validateInputs(deleteExperienceSchema)],
+    [requireAuth, validateInputs(deleteExperienceSchema)],
     deleteExperienceController
   );
 };

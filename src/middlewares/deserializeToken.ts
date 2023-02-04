@@ -10,8 +10,8 @@ const deserializeToken = async (
   if (!accessToken && !refreshToken) return next();
 
   const { decoded, expired } = verifyJwt(accessToken);
-  if (decoded?.account && decoded?.type) {
-    res.locals.type = decoded.type;
+  if (decoded?.account && decoded) {
+    res.locals = decoded;
     res.locals.account = decoded.account;
     return next();
   }
@@ -28,7 +28,7 @@ const deserializeToken = async (
     });
 
   const result = verifyJwt(newAccessToken as string);
-  res.locals.type = result?.decoded?.type;
+  res.locals.type = result?.decoded;
   res.locals.account = result?.decoded?.account;
 
   return next();
