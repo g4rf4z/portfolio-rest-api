@@ -35,7 +35,7 @@ export const createAdminController = async (
       res.locals?.account?.role === "ADMIN" &&
       ["SUPERADMIN", "ADMIN"].includes(req.body.data.role || "")
     ) {
-      req.body.data.role = "USER";
+      req.body.data.role = "ADMIN";
     }
 
     req.body.data.password = await hashString(req.body.data.password);
@@ -107,7 +107,6 @@ export const readAdminsController = async (
     };
     const foundAdmins = await readAdmins(req.body.params, readAdminsOptions);
     if (foundAdmins.length === 0) return res.status(204).send();
-
     return res.send(foundAdmins);
   } catch (error) {
     return handleError(error, res);
@@ -206,7 +205,7 @@ export const updateAdminRoleController = async (
       res.locals?.account?.role === "ADMIN" &&
       ["SUPERADMIN", "ADMIN"].includes(req.body.data.role || "")
     ) {
-      req.body.data.role = "USER";
+      req.body.data.role = "ADMIN";
     }
 
     const updateAdminOptions = {
