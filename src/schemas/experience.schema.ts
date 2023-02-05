@@ -1,4 +1,4 @@
-import { object, string, TypeOf } from "zod";
+import { date, object, string, TypeOf } from "zod";
 
 // ------------------------- CREATE EXPERIENCE SCHEMA -------------------------
 export const createExperienceSchema = object({
@@ -31,8 +31,8 @@ export const readExperiencesSchema = object({
       company: string(),
       city: string(),
       country: string(),
-      from: string(),
-      to: string(),
+      from: date(),
+      to: date(),
       tasks: string(),
     })
       .strict()
