@@ -10,8 +10,8 @@ const publicKey = config.get<string>("publicKey");
 export type JwtTokenData = {
   account: {
     id: string;
-    lastname: string;
     firstname: string;
+    lastname: string;
     email: string;
     role: AdminRole;
   };
