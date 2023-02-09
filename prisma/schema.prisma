@@ -62,11 +62,9 @@ model Skill {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  name       String
-  icon       String
-  iconWeight String
-  iconColor  String
-  progress   Int
+  name     String
+  image    String
+  progress Int
 
   @@map("skills")
 }

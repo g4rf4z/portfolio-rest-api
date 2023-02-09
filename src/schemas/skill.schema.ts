@@ -1,6 +1,5 @@
 import { object, string, number, TypeOf } from "zod";
 
-// ------------------------- CREATE SKILL SCHEMA -------------------------
 export const createSkillSchema = object({
   body: object({
     data: object({
@@ -13,14 +12,12 @@ export const createSkillSchema = object({
   }).strict(),
 });
 
-// ------------------------- READ SKILL SCHEMA -------------------------
 export const readSkillSchema = object({
   params: object({
     id: string(),
   }).strict(),
 });
 
-// ------------------------- READ SKILLS SCHEMA -------------------------
 export const readSkillsSchema = object({
   body: object({
     params: object({
@@ -36,7 +33,6 @@ export const readSkillsSchema = object({
   }).strict(),
 });
 
-// ------------------------- UPDATE SKILL SCHEMA -------------------------
 export const updateSkillSchema = object({
   params: object({
     id: string(),
@@ -52,7 +48,6 @@ export const updateSkillSchema = object({
   }).strict(),
 });
 
-// ------------------------- DELETE SKILLS SCHEMA -------------------------
 export const deleteSkillSchema = object({
   params: object({
     id: string(),

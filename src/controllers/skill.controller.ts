@@ -18,7 +18,6 @@ import {
   DeleteSkillInput,
 } from "../schemas/skill.schema";
 
-// ------------------------- CREATE SKILL CONTROLLER -------------------------
 export const createSkillController = async (
   req: Request<{}, {}, CreateSkillInput["body"]>,
   res: Response
@@ -45,7 +44,6 @@ export const createSkillController = async (
   }
 };
 
-// ------------------------- READ SKILL CONTROLLER -------------------------
 export const readSkillController = async (
   req: Request<FindSkillInput["params"], {}, {}>,
   res: Response
@@ -70,7 +68,6 @@ export const readSkillController = async (
   }
 };
 
-// ------------------------- READ SKILLS CONTROLLER -------------------------
 export const readSkillsController = async (
   req: Request<{}, {}, ListSkillsInput["body"]>,
   res: Response
@@ -97,7 +94,6 @@ export const readSkillsController = async (
   }
 };
 
-// ------------------------- UPDATE SKILL CONTROLLER -------------------------
 export const updateSkillController = async (
   req: Request<UpdateSkillInput["params"], {}, UpdateSkillInput["body"]>,
   res: Response
@@ -128,7 +124,6 @@ export const updateSkillController = async (
   }
 };
 
-// ------------------------- DELETE SKILL CONTROLLER -------------------------
 export const deleteSkillController = async (
   req: Request<DeleteSkillInput["params"], {}, {}>,
   res: Response

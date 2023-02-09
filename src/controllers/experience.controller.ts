@@ -18,13 +18,11 @@ import {
   DeleteExperienceInput,
 } from "../schemas/experience.schema";
 
-// ------------------------- CREATE EXPERIENCE CONTROLLER -------------------------
 export const createExperienceController = async (
   req: Request<{}, {}, CreateExperienceInput["body"]>,
   res: Response
 ) => {
   if (!checkAdminClearance(res, ["SUPERADMIN", "ADMIN"])) return;
-
   try {
     const createExperienceOptions = {
       select: {
@@ -50,7 +48,6 @@ export const createExperienceController = async (
   }
 };
 
-// ------------------------- READ EXPERIENCE CONTROLLER -------------------------
 export const readExperienceController = async (
   req: Request<FindExperienceInput["params"], {}, {}>,
   res: Response
@@ -80,7 +77,6 @@ export const readExperienceController = async (
   }
 };
 
-// ------------------------- READ EXPERIENCES CONTROLLER -------------------------
 export const readExperiencesController = async (
   req: Request<{}, {}, ListExperiencesInput["body"]>,
   res: Response
@@ -112,7 +108,6 @@ export const readExperiencesController = async (
   }
 };
 
-// ------------------------- UPDATE EXPERIENCE CONTROLLER -------------------------
 export const updateExperienceController = async (
   req: Request<
     UpdateExperienceInput["params"],
@@ -149,7 +144,6 @@ export const updateExperienceController = async (
   }
 };
 
-// ------------------------- DELETE EXPERIENCE CONTROLLER -------------------------
 export const deleteExperienceController = async (
   req: Request<DeleteExperienceInput["params"], {}, {}>,
   res: Response

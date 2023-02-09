@@ -1,6 +1,5 @@
 import { date, object, string, TypeOf } from "zod";
 
-// ------------------------- CREATE EXPERIENCE SCHEMA -------------------------
 export const createExperienceSchema = object({
   body: object({
     data: object({
@@ -15,14 +14,12 @@ export const createExperienceSchema = object({
   }).strict(),
 });
 
-// ------------------------- READ EXPERIENCE SCHEMA -------------------------
 export const readExperienceSchema = object({
   params: object({
     id: string(),
   }).strict(),
 });
 
-// ------------------------- READ EXPERIENCES SCHEMA -------------------------
 export const readExperiencesSchema = object({
   body: object({
     params: object({
@@ -31,8 +28,8 @@ export const readExperiencesSchema = object({
       company: string(),
       city: string(),
       country: string(),
-      from: date(),
-      to: date(),
+      from: string(),
+      to: string(),
       tasks: string(),
     })
       .strict()
@@ -40,7 +37,6 @@ export const readExperiencesSchema = object({
   }).strict(),
 });
 
-// ------------------------- UPDATE EXPERIENCE SCHEMA -------------------------
 export const updateExperienceSchema = object({
   params: object({
     id: string(),
@@ -58,7 +54,6 @@ export const updateExperienceSchema = object({
   }).strict(),
 });
 
-// ------------------------- DELETE EXPERIENCE SCHEMA -------------------------
 export const deleteExperienceSchema = object({
   params: object({
     id: string(),
