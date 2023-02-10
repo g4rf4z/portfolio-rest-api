@@ -63,7 +63,7 @@ model Skill {
   updatedAt DateTime @updatedAt
 
   name     String
-  image    String
+  image    String?
   progress Int
 
   @@map("skills")

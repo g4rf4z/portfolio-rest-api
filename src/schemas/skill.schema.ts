@@ -4,9 +4,7 @@ export const createSkillSchema = object({
   body: object({
     data: object({
       name: string(),
-      icon: string(),
-      iconWeight: string(),
-      iconColor: string(),
+      image: string(),
       progress: number(),
     }).strict(),
   }).strict(),
@@ -23,9 +21,7 @@ export const readSkillsSchema = object({
     params: object({
       id: string().optional(),
       name: string(),
-      icon: string(),
-      iconWeight: string(),
-      iconColor: string(),
+      image: string(),
       progress: number(),
     })
       .strict()
@@ -40,9 +36,7 @@ export const updateSkillSchema = object({
   body: object({
     data: object({
       name: string(),
-      icon: string(),
-      iconWeight: string(),
-      iconColor: string(),
+      image: string(),
       progress: number(),
     }).strict(),
   }).strict(),
