@@ -4,7 +4,6 @@ import { AdminRole } from "@prisma/client";
 
 import { validatePasswordComplexity } from "../utils/customValidators";
 
-// ------------------------- SCHEMA -> CREATE ADMIN -------------------------
 export const createAdminSchema = object({
   body: object({
     data: object({
@@ -22,14 +21,12 @@ export const createAdminSchema = object({
   }).strict(),
 });
 
-// ------------------------- SCHEMA -> READ ADMIN -------------------------
 export const readAdminSchema = object({
   params: object({
     id: string(),
   }).strict(),
 });
 
-// ------------------------- SCHEMA -> READ ADMINS -------------------------
 export const readAdminsSchema = object({
   body: object({
     params: object({
@@ -45,7 +42,6 @@ export const readAdminsSchema = object({
   }).strict(),
 });
 
-// ------------------------- SCHEMA -> UPDATE CURRENT ADMIN -------------------------
 export const updateCurrentAdminSchema = object({
   body: object({
     data: object({
@@ -56,7 +52,6 @@ export const updateCurrentAdminSchema = object({
   }).strict(),
 });
 
-// ------------------------- SCHEMA -> UPDATE CURRENT ADMIN EMAIL -------------------------
 export const updateCurrentAdminEmailSchema = object({
   body: object({
     data: object({
@@ -65,7 +60,6 @@ export const updateCurrentAdminEmailSchema = object({
   }).strict(),
 });
 
-// ------------------------- SCHEMA -> UPDATE CURRENT ADMIN PASSWORD -------------------------
 export const updateCurrentAdminPasswordSchema = object({
   body: object({
     data: object({
@@ -79,7 +73,6 @@ export const updateCurrentAdminPasswordSchema = object({
   }).strict(),
 });
 
-// ------------------------- SCHEMA -> UPDATE ADMIN ROLE -------------------------
 export const updateAdminRoleSchema = object({
   params: object({
     id: string(),
@@ -91,14 +84,12 @@ export const updateAdminRoleSchema = object({
   }).strict(),
 });
 
-// ------------------------- SCHEMA -> DISABLE ADMIN -------------------------
 export const disableAdminSchema = object({
   params: object({
     id: string(),
   }).strict(),
 });
 
-// ------------------------- SCHEMA -> DELETE ADMIN -------------------------
 export const deleteAdminSchema = object({
   params: object({
     id: string(),

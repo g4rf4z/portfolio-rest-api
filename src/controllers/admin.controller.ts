@@ -24,7 +24,6 @@ import type {
   DeleteAdminInput,
 } from "../schemas/admin.schema";
 
-// ------------------------- CONTROLLER -> CREATE ADMIN -------------------------
 export const createAdminController = async (
   req: Request<{}, {}, CreateAdminInput["body"]>,
   res: Response
@@ -61,7 +60,6 @@ export const createAdminController = async (
   }
 };
 
-// ------------------------- CONTROLLER -> READ ADMIN -------------------------
 export const readAdminController = async (
   req: Request<ReadAdminInput["params"], {}, {}>,
   res: Response
@@ -87,7 +85,6 @@ export const readAdminController = async (
   }
 };
 
-// ------------------------- CONTROLLER -> READ ADMINS -------------------------
 export const readAdminsController = async (
   req: Request<{}, {}, ReadAdminsInput["body"]>,
   res: Response
@@ -114,7 +111,6 @@ export const readAdminsController = async (
   }
 };
 
-// ------------------------- CONTROLLER -> UPDATE CURRENT ADMIN -------------------------
 export const updateCurrentAdminController = async (
   req: Request<{}, {}, UpdateCurrentAdminInput["body"]>,
   res: Response
@@ -138,7 +134,6 @@ export const updateCurrentAdminController = async (
   }
 };
 
-// ------------------------- CONTROLLER -> UPDATE CURRENT ADMIN EMAIL -------------------------
 export const updateCurrentAdminEmailController = async (
   req: Request<{}, {}, UpdateCurrentAdminEmailInput["body"]>,
   res: Response
@@ -160,7 +155,6 @@ export const updateCurrentAdminEmailController = async (
   }
 };
 
-// ------------------------- CONTROLLER -> UPDATE CURRENT ADMIN PASSWORD -------------------------
 export const updateCurrentAdminPasswordController = async (
   req: Request<{}, {}, UpdateCurrentAdminPasswordInput["body"]>,
   res: Response
@@ -190,7 +184,6 @@ export const updateCurrentAdminPasswordController = async (
   }
 };
 
-// ------------------------- CONTROLLER -> UPDATE ADMIN ROLE -------------------------
 export const updateAdminRoleController = async (
   req: Request<
     UpdateAdminRoleInput["params"],
@@ -233,7 +226,6 @@ export const updateAdminRoleController = async (
   }
 };
 
-// ------------------------- CONTROLLER -> DISABLE ADMIN -------------------------
 export const disableAdminController = async (
   req: Request<DisableAdminInput["params"], {}, {}>,
   res: Response
@@ -266,7 +258,6 @@ export const disableAdminController = async (
   }
 };
 
-// ------------------------- CONTROLLER -> DELETE ADMIN -------------------------
 export const deleteAdminController = async (
   req: Request<DeleteAdminInput["params"], {}, {}>,
   res: Response

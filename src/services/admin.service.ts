@@ -3,7 +3,6 @@ import type { Prisma } from "@prisma/client";
 import { prisma } from "../utils/prisma";
 import { handlePrismaError } from "../utils/errors";
 
-// ------------------------- SERVICE -> CREATE ADMIN -------------------------
 export const createAdmin = async (
   data: Prisma.AdminCreateArgs["data"],
   options: Omit<Prisma.AdminCreateArgs, "data"> = {}
@@ -15,7 +14,6 @@ export const createAdmin = async (
   }
 };
 
-// ------------------------- SERVICE -> READ ADMIN -------------------------
 export const readAdmin = async (
   params: Prisma.AdminFindUniqueOrThrowArgs["where"],
   options: Omit<Prisma.AdminFindUniqueOrThrowArgs, "where"> = {}
@@ -27,7 +25,6 @@ export const readAdmin = async (
   }
 };
 
-// ------------------------- SERVICE -> READ ADMINS -------------------------
 export const readAdmins = async (
   params: Prisma.AdminFindManyArgs["where"],
   options: Omit<Prisma.AdminFindManyArgs, "where"> = {}
@@ -39,7 +36,6 @@ export const readAdmins = async (
   }
 };
 
-// ------------------------- SERVICE -> UPDATE ADMIN -------------------------
 export const updateAdmin = async (
   params: Prisma.AdminUpdateArgs["where"],
   data: Prisma.AdminUpdateArgs["data"],
@@ -56,7 +52,6 @@ export const updateAdmin = async (
   }
 };
 
-// ------------------------- SERVICE -> DELETE ADMIN -------------------------
 export const deleteAdmin = async (
   params: Prisma.AdminDeleteArgs["where"],
   options: Omit<Prisma.AdminDeleteArgs, "where">

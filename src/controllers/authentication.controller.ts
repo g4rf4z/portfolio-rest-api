@@ -24,7 +24,6 @@ import type {
   SetPasswordInput,
 } from "../schemas/authentication.schema";
 
-// ------------------------- LOGIN CONTROLLER -------------------------
 export const loginController = async (
   req: Request<{}, {}, LoginInput["body"]>,
   res: Response
@@ -126,7 +125,6 @@ export const loginController = async (
   }
 };
 
-// ------------------------- LOGOUT CONTROLLER -------------------------
 export const logoutController = async (req: Request, res: Response) => {
   try {
     // revoke all active sessions
@@ -156,7 +154,6 @@ export const logoutController = async (req: Request, res: Response) => {
   }
 };
 
-// ------------------------- RESET PASSWORD -------------------------
 export const resetPasswordController = async (
   req: Request<{}, {}, ResetPasswordInput["body"]>,
   res: Response
@@ -204,7 +201,6 @@ export const resetPasswordController = async (
   }
 };
 
-// ------------------------- SET PASSWORD -------------------------
 export const setNewPasswordController = async (
   req: Request<SetPasswordInput["params"], {}, SetPasswordInput["body"]>,
   res: Response
