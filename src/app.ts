@@ -5,7 +5,7 @@ import config from "config";
 import createServer from "./server/createServer";
 
 const port = config.get<number>("port");
-const rootUrl = config.get<string>("domainUri");
+const rootUrl = config.get<string>("clientUri");
 const app = createServer();
 
 app.listen(port, async () => {

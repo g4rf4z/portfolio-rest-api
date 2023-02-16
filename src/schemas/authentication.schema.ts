@@ -66,25 +66,7 @@ export const setPasswordSchema = object({
   }).strict(),
 });
 
-// ------------------------- SCHEMA -> DELETE SESSION BY ID -------------------------
-export const deleteSessionSchema = object({
-  params: object({
-    id: string(),
-  }).strict(),
-});
-
-// ------------------------- SCHEMA -> DELETE ALL INACTIVE SESSIONS -------------------------
-export const deleteInactiveSessionsSchema = object({
-  params: object({
-    isActive: boolean().optional(),
-  }).strict(),
-});
-
 export type ReadSessionsInput = TypeOf<typeof readSessionsSchema>;
 export type LoginInput = TypeOf<typeof loginSchema>;
 export type ResetPasswordInput = TypeOf<typeof resetPasswordSchema>;
 export type SetPasswordInput = TypeOf<typeof setPasswordSchema>;
-export type DeleteSessionInput = TypeOf<typeof deleteSessionSchema>;
-export type DeleteInactiveSessionsInput = TypeOf<
-  typeof deleteInactiveSessionsSchema
->;

@@ -1,5 +1,6 @@
 import express from "express";
 import helmet from "helmet";
+import config from "config";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
@@ -8,11 +9,12 @@ import routes from "../routes";
 
 const createServer = () => {
   const app = express();
+  const clientUri = config.get<string>("clientUri");
   app.use(helmet({ expectCt: false }));
   app.use(
     cors({
       credentials: true,
-      origin: ["http://localhost:3000"],
+      origin: [clientUri],
       methods: ["GET", "POST", "PATCH", "DELETE"],
     })
   );

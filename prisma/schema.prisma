@@ -39,7 +39,7 @@ model Session {
   isActive  Boolean @default(true)
   userAgent String?
 
-  admin   Admin? @relation(fields: [ownerId], references: [id])
+  admin   Admin  @relation(fields: [ownerId], references: [id])
   ownerId String @db.ObjectId
 
   @@map("sessions")
@@ -80,7 +80,7 @@ model Experience {
   country  String
   from     DateTime
   to       DateTime
-  tasks    String
+  tasks    String[]
 
   @@map("experiences")
 }

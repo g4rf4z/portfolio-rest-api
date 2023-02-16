@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { checkAdminClearance } from "../utils/checkPermissions";
 import { handleError } from "../utils/errors";
 
 import {
@@ -22,7 +21,6 @@ export const createExperienceController = async (
   req: Request<{}, {}, CreateExperienceInput["body"]>,
   res: Response
 ) => {
-  if (!checkAdminClearance(res, ["SUPERADMIN", "ADMIN"])) return;
   try {
     const createExperienceOptions = {
       select: {
@@ -116,8 +114,6 @@ export const updateExperienceController = async (
   >,
   res: Response
 ) => {
-  if (!checkAdminClearance(res, ["SUPERADMIN", "ADMIN"])) return;
-
   try {
     const updateExperienceOptions = {
       select: {
@@ -149,8 +145,6 @@ export const deleteExperienceController = async (
   res: Response
 ) => {
   try {
-    if (!checkAdminClearance(res, ["SUPERADMIN", "ADMIN"])) return;
-
     const deleteExperienceOptions = {
       select: {
         id: true,

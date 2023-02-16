@@ -28,7 +28,7 @@ export const createAdminController = async (
   req: Request<{}, {}, CreateAdminInput["body"]>,
   res: Response
 ) => {
-  if (!checkAdminClearance(res, ["SUPERADMIN", "ADMIN"])) return;
+  if (!checkAdminClearance(res, ["SUPERADMIN"])) return;
 
   try {
     if (
@@ -198,7 +198,7 @@ export const updateAdminRoleController = async (
   >,
   res: Response
 ) => {
-  if (!checkAdminClearance(res, ["SUPERADMIN", "ADMIN"])) return;
+  if (!checkAdminClearance(res, ["SUPERADMIN"])) return;
 
   try {
     if (
@@ -238,7 +238,7 @@ export const disableAdminController = async (
   res: Response
 ) => {
   try {
-    if (!checkAdminClearance(res, ["SUPERADMIN", "ADMIN"])) return;
+    if (!checkAdminClearance(res, ["SUPERADMIN"])) return;
 
     const updateAdminOptions = {
       select: {
@@ -253,12 +253,6 @@ export const disableAdminController = async (
         isActive: true,
       },
     };
-    if (res.locals.account.role === "ADMIN") {
-      const foundAdmin = await readAdmin(req.params);
-      if (["SUPERADMIN", "ADMIN"].includes(foundAdmin.role)) {
-        res.status(403).send();
-      }
-    }
 
     const updatedAdmin = await updateAdmin(
       { id: req.params.id },
@@ -277,7 +271,7 @@ export const deleteAdminController = async (
   res: Response
 ) => {
   try {
-    if (!checkAdminClearance(res, ["SUPERADMIN", "ADMIN"])) return;
+    if (!checkAdminClearance(res, ["SUPERADMIN"])) return;
 
     const deleteAdminOptions = {
       select: {
@@ -292,13 +286,6 @@ export const deleteAdminController = async (
         isActive: true,
       },
     };
-    if (res.locals.account.role === "ADMIN") {
-      const foundAdmin = await readAdmin(req.params);
-      if (["SUPERADMIN", "ADMIN"].includes(foundAdmin.role)) {
-        res.status(403).send();
-      }
-    }
-
     const deletedAdmin = await deleteAdmin(
       { id: req.params.id },
       deleteAdminOptions

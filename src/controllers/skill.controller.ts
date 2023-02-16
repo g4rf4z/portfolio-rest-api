@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { checkAdminClearance } from "../utils/checkPermissions";
 import { handleError } from "../utils/errors";
 
 import {
@@ -22,8 +21,6 @@ export const createSkillController = async (
   req: Request<{}, {}, CreateSkillInput["body"]>,
   res: Response
 ) => {
-  if (!checkAdminClearance(res, ["SUPERADMIN", "ADMIN"])) return;
-
   try {
     const createSkillOptions = {
       select: {
@@ -92,8 +89,6 @@ export const updateSkillController = async (
   req: Request<UpdateSkillInput["params"], {}, UpdateSkillInput["body"]>,
   res: Response
 ) => {
-  if (!checkAdminClearance(res, ["SUPERADMIN", "ADMIN"])) return;
-
   try {
     const updateSkillOptions = {
       select: {
@@ -121,8 +116,6 @@ export const deleteSkillController = async (
   res: Response
 ) => {
   try {
-    if (!checkAdminClearance(res, ["SUPERADMIN", "ADMIN"])) return;
-
     const deleteSkillOptions = {
       select: {
         id: true,
