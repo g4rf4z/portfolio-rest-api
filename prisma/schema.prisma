@@ -18,7 +18,7 @@ model Admin {
   nickname  String    @unique
   email     String    @unique
   password  String
-  role      AdminRole @default(GUEST)
+  role      AdminRole @default(ADMIN)
   isActive  Boolean   @default(true)
 
   sessions Session[]
@@ -29,30 +29,6 @@ model Admin {
 enum AdminRole {
   SUPERADMIN
   ADMIN
-  USER
-  GUEST
-}
-
-model User {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  firstname String
-  lastname  String
-  email     String   @unique
-  nickname  String   @unique
-  password  String
-  role      UserRole @default(USER)
-  isActive  Boolean  @default(true)
-
-  AdminSession Session[]
-
-  @@map("users")
-}
-
-enum UserRole {
-  USER
 }
 
 model Session {
@@ -60,20 +36,13 @@ model Session {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  type      AccountType
-  isActive  Boolean     @default(true)
+  isActive  Boolean @default(true)
   userAgent String?
 
-  admin   Admin? @relation(fields: [ownerId], references: [id])
-  user    User?  @relation(fields: [ownerId], references: [id])
+  admin   Admin  @relation(fields: [ownerId], references: [id])
   ownerId String @db.ObjectId
 
   @@map("sessions")
-}
-
-enum AccountType {
-  ADMIN
-  USER
 }
 
 model ResetPasswordToken {
@@ -81,10 +50,37 @@ model ResetPasswordToken {
   createdAt DateTime @default(now())
   expiresAt DateTime
 
-  type    AccountType
-  token   String      @unique
+  token   String  @unique
   ownerId String
-  isValid Boolean     @default(true)
+  isValid Boolean @default(true)
 
   @@map("reset_password_tokens")
+}
+
+model Skill {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name     String
+  image    String?
+  progress Int
+
+  @@map("skills")
+}
+
+model Experience {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  position String
+  company  String
+  city     String
+  country  String
+  from     DateTime
+  to       DateTime
+  tasks    String[]
+
+  @@map("experiences")
 }

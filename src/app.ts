@@ -1,13 +1,13 @@
 import dotenv from "dotenv";
-dotenv.config(); // Import .env variables
+dotenv.config();
 
 import config from "config";
 import createServer from "./server/createServer";
 
 const port = config.get<number>("port");
-const rootUrl = config.get<string>("domainUri");
+const rootUrl = config.get<string>("clientUri");
 const app = createServer();
 
 app.listen(port, async () => {
-  console.info(`API is running on: ${rootUrl}, port: ${port}`);
+  console.info(`API is running on ${rootUrl}`);
 });

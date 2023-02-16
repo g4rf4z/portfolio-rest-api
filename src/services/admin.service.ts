@@ -1,8 +1,8 @@
-import { Prisma } from "@prisma/client";
-import { prisma } from "../utils/prisma";
-import { CustomError, handlePrismaError } from "../utils/errors";
+import type { Prisma } from "@prisma/client";
 
-// CREATE ADMIN
+import { prisma } from "../utils/prisma";
+import { handlePrismaError } from "../utils/errors";
+
 export const createAdmin = async (
   data: Prisma.AdminCreateArgs["data"],
   options: Omit<Prisma.AdminCreateArgs, "data"> = {}
@@ -14,20 +14,7 @@ export const createAdmin = async (
   }
 };
 
-// FIND ADMINS
-export const findManyAdmins = async (
-  params: Prisma.AdminFindManyArgs["where"],
-  options: Omit<Prisma.AdminFindManyArgs, "where"> = {}
-) => {
-  try {
-    return await prisma.admin.findMany({ where: params, ...options });
-  } catch (error) {
-    throw handlePrismaError(error, "admin");
-  }
-};
-
-// FIND ADMIN
-export const findUniqueAdmin = async (
+export const readAdmin = async (
   params: Prisma.AdminFindUniqueOrThrowArgs["where"],
   options: Omit<Prisma.AdminFindUniqueOrThrowArgs, "where"> = {}
 ) => {
@@ -38,7 +25,17 @@ export const findUniqueAdmin = async (
   }
 };
 
-// UPDATE ADMIN
+export const readAdmins = async (
+  params: Prisma.AdminFindManyArgs["where"],
+  options: Omit<Prisma.AdminFindManyArgs, "where"> = {}
+) => {
+  try {
+    return await prisma.admin.findMany({ where: params, ...options });
+  } catch (error) {
+    throw handlePrismaError(error, "admin");
+  }
+};
+
 export const updateAdmin = async (
   params: Prisma.AdminUpdateArgs["where"],
   data: Prisma.AdminUpdateArgs["data"],
@@ -55,7 +52,6 @@ export const updateAdmin = async (
   }
 };
 
-// DELETE ADMIN
 export const deleteAdmin = async (
   params: Prisma.AdminDeleteArgs["where"],
   options: Omit<Prisma.AdminDeleteArgs, "where">

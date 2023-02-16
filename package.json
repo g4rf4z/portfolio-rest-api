@@ -9,7 +9,9 @@
     "scripts": {
         "dev": "ts-node-dev --respawn --transpile-only src/app.ts",
         "build": "tsc",
-        "start": "node build/app.js"
+        "start": "node build/app.js",
+        "prisma": "npx prisma generate && npx prisma db push",
+        "studio": "npx prisma studio"
     },
     "dependencies": {
         "aws-sdk": "~2.1269.0",
