@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+
 import { handleError } from "../utils/errors";
 
 import {
@@ -9,10 +10,10 @@ import {
   deleteExperience,
 } from "../services/experience.service";
 
-import {
+import type {
   CreateExperienceInput,
-  FindExperienceInput,
-  ListExperiencesInput,
+  ReadExperienceInput,
+  ReadExperiencesInput,
   UpdateExperienceInput,
   DeleteExperienceInput,
 } from "../schemas/experience.schema";
@@ -47,7 +48,7 @@ export const createExperienceController = async (
 };
 
 export const readExperienceController = async (
-  req: Request<FindExperienceInput["params"], {}, {}>,
+  req: Request<ReadExperienceInput["params"], {}, {}>,
   res: Response
 ) => {
   try {
@@ -76,7 +77,7 @@ export const readExperienceController = async (
 };
 
 export const readExperiencesController = async (
-  req: Request<{}, {}, ListExperiencesInput["body"]>,
+  req: Request<{}, {}, ReadExperiencesInput["body"]>,
   res: Response
 ) => {
   try {

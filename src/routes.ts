@@ -2,14 +2,13 @@ import { Express } from "express";
 
 import { requireAuth } from "./middlewares/requireAuthentication";
 
-import {
-  readSessionsSchema,
-  loginSchema,
-} from "./schemas/authentication.schema";
+import { loginSchema } from "./schemas/authentication.schema";
 import {
   loginController,
   logoutController,
 } from "./controllers/authentication.controller";
+
+import { readSessionsSchema } from "./schemas/session.schema";
 import {
   findOwnSessionController,
   findOwnSessionsController,
@@ -20,7 +19,7 @@ import {
   createAdminSchema,
   readAdminSchema,
   readAdminsSchema,
-  updateCurrentAdminNameSchema,
+  updateCurrentAdminSchema,
   updateCurrentAdminEmailSchema,
   updateCurrentAdminPasswordSchema,
   updateAdminRoleSchema,
@@ -31,7 +30,7 @@ import {
   createAdminController,
   readAdminController,
   readAdminsController,
-  updateCurrentAdminNameController,
+  updateCurrentAdminController,
   updateCurrentAdminEmailController,
   updateCurrentAdminPasswordController,
   updateAdminRoleController,
@@ -72,9 +71,11 @@ import {
 import validateInputs from "./middlewares/validateInputs";
 
 const routes = (app: Express) => {
-  // ------------------------- AUTHENTICATION -------------------------
+  // ------------------------- ROUTES -> AUTHENTICATION -------------------------
   app.post("/login", [validateInputs(loginSchema)], loginController);
   app.post("/logout", requireAuth, logoutController);
+
+  // ------------------------- ROUTES -> SESSIONS -------------------------
   app.get(
     "/me/session",
     [requireAuth, validateInputs(readSessionsSchema)],
@@ -91,7 +92,7 @@ const routes = (app: Express) => {
     deleteInactiveSessionsController
   );
 
-  // ------------------------- ADMINS -------------------------
+  // ------------------------- ROUTES -> ADMINS -------------------------
   app.post(
     "/admins",
     [requireAuth, validateInputs(createAdminSchema)],
@@ -109,8 +110,8 @@ const routes = (app: Express) => {
   );
   app.patch(
     "/me",
-    [requireAuth, validateInputs(updateCurrentAdminNameSchema)],
-    updateCurrentAdminNameController
+    [requireAuth, validateInputs(updateCurrentAdminSchema)],
+    updateCurrentAdminController
   );
   app.patch(
     "/me/email",
@@ -138,7 +139,7 @@ const routes = (app: Express) => {
     deleteAdminController
   );
 
-  // ------------------------- SKILLS -------------------------
+  // ------------------------- ROUTES -> SKILLS -------------------------
   app.post(
     "/skills",
     [requireAuth, validateInputs(createSkillSchema)],
@@ -161,7 +162,7 @@ const routes = (app: Express) => {
     deleteSkillController
   );
 
-  // ------------------------- EXPERIENCES -------------------------
+  // ------------------------- ROUTES -> EXPERIENCES -------------------------
   app.post(
     "/experiences",
     [requireAuth, validateInputs(createExperienceSchema)],

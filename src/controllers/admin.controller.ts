@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+
 import { checkAdminClearance } from "../utils/checkPermissions";
 import { hashString } from "../utils/hash.utils";
 import { handleError } from "../utils/errors";
@@ -11,11 +12,11 @@ import {
   deleteAdmin,
 } from "../services/admin.service";
 
-import {
+import type {
   CreateAdminInput,
-  FindAdminInput,
-  ListAdminsInput,
-  UpdateCurrentAdminNameInput,
+  ReadAdminInput,
+  ReadAdminsInput,
+  UpdateCurrentAdminInput,
   UpdateCurrentAdminEmailInput,
   UpdateCurrentAdminPasswordInput,
   UpdateAdminRoleInput,
@@ -23,7 +24,7 @@ import {
   DeleteAdminInput,
 } from "../schemas/admin.schema";
 
-// ------------------------- CREATE ADMIN CONTROLLER -------------------------
+// ------------------------- CONTROLLER -> CREATE ADMIN -------------------------
 export const createAdminController = async (
   req: Request<{}, {}, CreateAdminInput["body"]>,
   res: Response
@@ -60,9 +61,9 @@ export const createAdminController = async (
   }
 };
 
-// ------------------------- READ ADMIN CONTROLLER -------------------------
+// ------------------------- CONTROLLER -> READ ADMIN -------------------------
 export const readAdminController = async (
-  req: Request<FindAdminInput["params"], {}, {}>,
+  req: Request<ReadAdminInput["params"], {}, {}>,
   res: Response
 ) => {
   try {
@@ -86,9 +87,9 @@ export const readAdminController = async (
   }
 };
 
-// ------------------------- READ ADMINS CONTROLLER -------------------------
+// ------------------------- CONTROLLER -> READ ADMINS -------------------------
 export const readAdminsController = async (
-  req: Request<{}, {}, ListAdminsInput["body"]>,
+  req: Request<{}, {}, ReadAdminsInput["body"]>,
   res: Response
 ) => {
   try {
@@ -113,9 +114,9 @@ export const readAdminsController = async (
   }
 };
 
-// ------------------------- UPDATE CURRENT ADMIN NAME CONTROLLER -------------------------
-export const updateCurrentAdminNameController = async (
-  req: Request<{}, {}, UpdateCurrentAdminNameInput["body"]>,
+// ------------------------- CONTROLLER -> UPDATE CURRENT ADMIN -------------------------
+export const updateCurrentAdminController = async (
+  req: Request<{}, {}, UpdateCurrentAdminInput["body"]>,
   res: Response
 ) => {
   try {
@@ -137,7 +138,7 @@ export const updateCurrentAdminNameController = async (
   }
 };
 
-// ------------------------- UPDATE CURRENT ADMIN EMAIL CONTROLLER -------------------------
+// ------------------------- CONTROLLER -> UPDATE CURRENT ADMIN EMAIL -------------------------
 export const updateCurrentAdminEmailController = async (
   req: Request<{}, {}, UpdateCurrentAdminEmailInput["body"]>,
   res: Response
@@ -159,7 +160,7 @@ export const updateCurrentAdminEmailController = async (
   }
 };
 
-// ------------------------- UPDATE CURRENT ADMIN PASSWORD CONTROLLER -------------------------
+// ------------------------- CONTROLLER -> UPDATE CURRENT ADMIN PASSWORD -------------------------
 export const updateCurrentAdminPasswordController = async (
   req: Request<{}, {}, UpdateCurrentAdminPasswordInput["body"]>,
   res: Response
@@ -189,7 +190,7 @@ export const updateCurrentAdminPasswordController = async (
   }
 };
 
-// ------------------------- UPDATE ADMIN ROLE CONTROLLER -------------------------
+// ------------------------- CONTROLLER -> UPDATE ADMIN ROLE -------------------------
 export const updateAdminRoleController = async (
   req: Request<
     UpdateAdminRoleInput["params"],
@@ -232,7 +233,7 @@ export const updateAdminRoleController = async (
   }
 };
 
-// ------------------------- DISABLE ADMIN CONTROLLER -------------------------
+// ------------------------- CONTROLLER -> DISABLE ADMIN -------------------------
 export const disableAdminController = async (
   req: Request<DisableAdminInput["params"], {}, {}>,
   res: Response
@@ -265,7 +266,7 @@ export const disableAdminController = async (
   }
 };
 
-// ------------------------- DELETE ADMIN CONTROLLER -------------------------
+// ------------------------- CONTROLLER -> DELETE ADMIN -------------------------
 export const deleteAdminController = async (
   req: Request<DeleteAdminInput["params"], {}, {}>,
   res: Response

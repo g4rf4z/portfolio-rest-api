@@ -37,7 +37,7 @@ export const loginController = async (
       message: "invalid_credentials",
     });
 
-    // check if account exist
+    // Check if account exists
     try {
       const findOwnerParams = { email: req.body.data.email };
       foundOwner = await readAdmin(findOwnerParams);
@@ -45,7 +45,7 @@ export const loginController = async (
       throw badCredentials;
     }
 
-    // check password match
+    // Check if passwords match
     const passwordsMatch = await compareData(
       foundOwner.password,
       req.body.data.password
@@ -55,7 +55,7 @@ export const loginController = async (
       throw badCredentials;
     }
 
-    // create a new session
+    // Create new session
     const createSessionData: Prisma.SessionCreateInput = {
       userAgent: req.get("user-agent") || null,
       admin: {
@@ -76,7 +76,7 @@ export const loginController = async (
       createdSessionOptions
     );
 
-    // revoke all active sessions
+    // Revoke active sessions
     updateSessions(
       {
         ownerId: foundOwner.id,
@@ -86,7 +86,7 @@ export const loginController = async (
       { isActive: false }
     );
 
-    // generate tokens
+    // Generate tokens
     const tokenData: JwtTokenData = {
       account: {
         id: foundOwner.id,
@@ -103,7 +103,7 @@ export const loginController = async (
     const accessToken = newAccessToken(tokenData);
     const refreshToken = newRefreshToken(tokenData);
 
-    // set cookies
+    // Set cookies
     res.cookie("accessToken", accessToken, {
       maxAge: 900000, // 15 minutes
       httpOnly: true,
@@ -118,7 +118,7 @@ export const loginController = async (
       secure: true,
     });
 
-    // send session data
+    // Send session data
     delete (createdSession as any)?.admin?.password;
     return res.send(createdSession);
   } catch (error) {
@@ -157,90 +157,90 @@ export const logoutController = async (req: Request, res: Response) => {
 };
 
 // ------------------------- RESET PASSWORD -------------------------
-// export const resetPasswordController = async (
-//   req: Request<ResetPasswordInput["params"], {}, ResetPasswordInput["body"]>,
-//   res: Response
-// ) => {
-//   let tokenSent = {
-//     message: "Password reset email has been sent (if the account exist)",
-//   };
-//   try {
-//     let foundAccount;
+export const resetPasswordController = async (
+  req: Request<{}, {}, ResetPasswordInput["body"]>,
+  res: Response
+) => {
+  let tokenSent = {
+    message: "Password reset email has been sent (if the account exist)",
+  };
+  try {
+    let foundAccount;
 
-//     // check if account exist
-//     const foundAccountParams = { email: req.body.data.email };
-//     foundAccount = await readAdmin(foundAccountParams);
+    // check if account exist
+    const foundAccountParams = { email: req.body.data.email };
+    foundAccount = await readAdmin(foundAccountParams);
 
-//     // invalidate previous reset password tokens
-//     await updateResetPasswordTokens(
-//       { id: foundAccount.id },
-//       { isValid: false }
-//     );
+    // invalidate previous reset password tokens
+    await updateResetPasswordTokens(
+      { id: foundAccount.id },
+      { isValid: false }
+    );
 
-//     // generate reset password token and save it
-//     let token = crypto.randomBytes(32).toString("hex");
-//     const tokenHash = await hashString(token);
-//     const createTokenData = {
-//       expiresAt: new Date(new Date().getTime() + 5 * 60000), // expires in 3 minutes
-//       token: tokenHash,
-//       ownerId: foundAccount.id,
-//     };
-//     await createResetPasswordToken(createTokenData);
+    // generate reset password token and save it
+    let token = crypto.randomBytes(32).toString("hex");
+    const tokenHash = await hashString(token);
+    const createTokenData = {
+      expiresAt: new Date(new Date().getTime() + 5 * 60000), // expires in 3 minutes
+      token: tokenHash,
+      ownerId: foundAccount.id,
+    };
+    await createResetPasswordToken(createTokenData);
 
-//     // send email
-//     // await sendEmail({
-//     //   to: foundAccount.email,
-//     //   subject: "Password Reset - Lille Esport",
-//     //   text: "Reset password link",
-//     //   html: `<p>Id: ${foundAccount.id}</p><p>ResetPasswordToken: ${token}</p>`,
-//     // });
+    // send email
+    // await sendEmail({
+    //   to: foundAccount.email,
+    //   subject: "Password Reset - Lille Esport",
+    //   text: "Reset password link",
+    //   html: `<p>Id: ${foundAccount.id}</p><p>ResetPasswordToken: ${token}</p>`,
+    // });
 
-//     return res.status(200).send(tokenSent);
-//   } catch (error) {
-//     if (error instanceof CustomError && error.message === "not_found") {
-//       return res.status(200).send(tokenSent);
-//     }
-//     return handleError(error, res);
-//   }
-// };
+    return res.status(200).send(tokenSent);
+  } catch (error) {
+    if (error instanceof CustomError && error.message === "not_found") {
+      return res.status(200).send(tokenSent);
+    }
+    return handleError(error, res);
+  }
+};
 
 // ------------------------- SET PASSWORD -------------------------
-// export const setNewPasswordController = async (
-//   req: Request<SetPasswordInput["params"], {}, SetPasswordInput["body"]>,
-//   res: Response
-// ) => {
-//   try {
-//     let foundToken;
-//     try {
-//       foundToken = await findResetPasswordToken({
-//         ownerId: req.params.id,
-//         isValid: true,
-//         expiresAt: {
-//           gte: new Date(),
-//         },
-//       });
-//     } catch (error) {
-//       return res.status(498).send();
-//     }
+export const setNewPasswordController = async (
+  req: Request<SetPasswordInput["params"], {}, SetPasswordInput["body"]>,
+  res: Response
+) => {
+  try {
+    let foundToken;
+    try {
+      foundToken = await findResetPasswordToken({
+        ownerId: req.params.id,
+        isValid: true,
+        expiresAt: {
+          gte: new Date(),
+        },
+      });
+    } catch (error) {
+      return res.status(498).send();
+    }
 
-//     const tokenMatch = await compareData(foundToken.token, req.params.token);
-//     if (!tokenMatch) return res.status(498).send();
+    const tokenMatch = await compareData(foundToken.token, req.params.token);
+    if (!tokenMatch) return res.status(498).send();
 
-//     // invalidate token
-//     await updateResetPasswordToken({ id: foundToken.id }, { isValid: false });
+    // invalidate token
+    await updateResetPasswordToken({ id: foundToken.id }, { isValid: false });
 
-//     // hash password
-//     req.body.data.password = await hashString(req.body.data.password);
-//     delete req.body.data.passwordConfirmation;
+    // hash password
+    req.body.data.password = await hashString(req.body.data.password);
+    delete req.body.data.passwordConfirmation;
 
-//     // set new password
-//     await updateAdmin(
-//       { id: req.params.id },
-//       { password: req.body.data.password }
-//     );
+    // set new password
+    await updateAdmin(
+      { id: req.params.id },
+      { password: req.body.data.password }
+    );
 
-//     return res.status(200).send({ message: "Successfully updated password" });
-//   } catch (error) {
-//     return handleError(error, res);
-//   }
-// };
+    return res.status(200).send({ message: "Successfully updated password" });
+  } catch (error) {
+    return handleError(error, res);
+  }
+};

@@ -1,8 +1,8 @@
 import type { Prisma } from "@prisma/client";
+
 import { prisma } from "../utils/prisma";
 import { handlePrismaError } from "../utils/errors";
 
-// ------------------------- SERVICE -> CREATE SESSION -------------------------
 export const createSession = async (
   data: Prisma.SessionCreateArgs["data"],
   options: Omit<Prisma.SessionCreateArgs, "data"> = {}
@@ -14,7 +14,6 @@ export const createSession = async (
   }
 };
 
-// ------------------------- SERVICE -> READ SESSION -------------------------
 export const readSession = async (
   params: Prisma.SessionFindFirstOrThrowArgs["where"],
   options: Omit<Prisma.SessionFindFirstOrThrowArgs, "where"> = {}
@@ -26,7 +25,6 @@ export const readSession = async (
   }
 };
 
-// ------------------------- SERVICE -> READ SESSIONS -------------------------
 export const readSessions = async (
   params: Prisma.SessionFindManyArgs["where"],
   options: Omit<Prisma.SessionFindManyArgs, "where"> = {}
@@ -38,7 +36,6 @@ export const readSessions = async (
   }
 };
 
-// ------------------------- SERVICE -> UPDATE SESSIONS -------------------------
 export const updateSessions = async (
   params: Prisma.SessionUpdateManyArgs["where"],
   data: Prisma.SessionUpdateManyArgs["data"]
@@ -50,7 +47,6 @@ export const updateSessions = async (
   }
 };
 
-// ------------------------- SERVICE -> DELETE SESSION -------------------------
 export const deleteSession = async (
   params: Prisma.SessionDeleteArgs["where"],
   options: Omit<Prisma.SessionDeleteArgs, "where">
@@ -62,7 +58,6 @@ export const deleteSession = async (
   }
 };
 
-// ------------------------- SERVICE -> DELETE SESSIONS -------------------------
 export const deleteSessions = async (
   params: Prisma.SessionDeleteManyArgs["where"],
   options: Omit<Prisma.SessionDeleteManyArgs, "where"> = {}

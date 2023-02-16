@@ -8,9 +8,8 @@ import {
   deleteSessions,
 } from "../services/session.service";
 
-import type { ReadSessionsInput } from "../schemas/authentication.schema";
+import type { ReadSessionsInput } from "../schemas/session.schema";
 
-// ------------------------- CONTROLLER -> FIND OWN SESSION -------------------------
 export const findOwnSessionController = async (
   req: Request<{}, {}, ReadSessionsInput["body"]>,
   res: Response
@@ -38,7 +37,6 @@ export const findOwnSessionController = async (
   }
 };
 
-// ------------------------- CONTROLLER -> FIND SESSIONS -------------------------
 export const findOwnSessionsController = async (
   req: Request<{}, {}, ReadSessionsInput["body"]>,
   res: Response
@@ -56,7 +54,6 @@ export const findOwnSessionsController = async (
       },
     };
     const foundOwnSessions = await readSessions(
-      // { ownerId: res.locals?.account?.id },
       { ownerId: req.body.params?.ownerId },
       findOwnSessionsOptions
     );
@@ -67,7 +64,6 @@ export const findOwnSessionsController = async (
   }
 };
 
-// ------------------------- CONTROLLER -> DELETE INACTIVE SESSIONS -------------------------
 export const deleteInactiveSessionsController = async (
   req: Request,
   res: Response

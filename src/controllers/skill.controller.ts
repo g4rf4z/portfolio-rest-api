@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+
 import { handleError } from "../utils/errors";
 
 import {
@@ -9,10 +10,10 @@ import {
   deleteSkill,
 } from "../services/skill.service";
 
-import {
+import type {
   CreateSkillInput,
-  FindSkillInput,
-  ListSkillsInput,
+  ReadSkillInput,
+  ReadSkillsInput,
   UpdateSkillInput,
   DeleteSkillInput,
 } from "../schemas/skill.schema";
@@ -40,7 +41,7 @@ export const createSkillController = async (
 };
 
 export const readSkillController = async (
-  req: Request<FindSkillInput["params"], {}, {}>,
+  req: Request<ReadSkillInput["params"], {}, {}>,
   res: Response
 ) => {
   try {
@@ -62,7 +63,7 @@ export const readSkillController = async (
 };
 
 export const readSkillsController = async (
-  req: Request<{}, {}, ListSkillsInput["body"]>,
+  req: Request<{}, {}, ReadSkillsInput["body"]>,
   res: Response
 ) => {
   try {

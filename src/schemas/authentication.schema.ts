@@ -1,32 +1,9 @@
-import { AdminRole } from "@prisma/client";
-import {
-  object,
-  string,
-  boolean,
-  TypeOf,
-  enum as zodEnum,
-  nativeEnum,
-} from "zod";
+import { object, string, enum as zodEnum, TypeOf } from "zod";
+
 import { validatePasswordComplexity } from "../utils/customValidators";
 
 const TYPE_VALUES = ["admin", "user"] as const;
 
-// ------------------------- SCHEMA -> READ SESSIONS -------------------------
-export const readSessionsSchema = object({
-  body: object({
-    params: object({
-      id: string().optional(),
-      isActive: boolean().optional(),
-      userAgent: string().optional(),
-      admin: nativeEnum(AdminRole).optional(),
-      ownerId: string().optional(),
-    })
-      .strict()
-      .optional(),
-  }).strict(),
-});
-
-// ------------------------- SCHEMA -> LOGIN -------------------------
 export const loginSchema = object({
   body: object({
     data: object({
@@ -36,7 +13,6 @@ export const loginSchema = object({
   }).strict(),
 });
 
-// ------------------------- SCHEMA -> RESET PASSWORD -------------------------
 export const resetPasswordSchema = object({
   params: object({
     type: zodEnum(TYPE_VALUES),
@@ -48,7 +24,6 @@ export const resetPasswordSchema = object({
   }).strict(),
 });
 
-// ------------------------- SCHEMA -> SET PASSWORD -------------------------
 export const setPasswordSchema = object({
   params: object({
     type: zodEnum(TYPE_VALUES),
@@ -66,7 +41,6 @@ export const setPasswordSchema = object({
   }).strict(),
 });
 
-export type ReadSessionsInput = TypeOf<typeof readSessionsSchema>;
 export type LoginInput = TypeOf<typeof loginSchema>;
 export type ResetPasswordInput = TypeOf<typeof resetPasswordSchema>;
 export type SetPasswordInput = TypeOf<typeof setPasswordSchema>;

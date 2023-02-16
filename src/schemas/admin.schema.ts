@@ -1,8 +1,10 @@
 import { object, string, nativeEnum, boolean, TypeOf } from "zod";
+
 import { AdminRole } from "@prisma/client";
+
 import { validatePasswordComplexity } from "../utils/customValidators";
 
-// ------------------------- CREATE ADMIN SCHEMA -------------------------
+// ------------------------- SCHEMA -> CREATE ADMIN -------------------------
 export const createAdminSchema = object({
   body: object({
     data: object({
@@ -20,14 +22,14 @@ export const createAdminSchema = object({
   }).strict(),
 });
 
-// ------------------------- READ ADMIN SCHEMA -------------------------
+// ------------------------- SCHEMA -> READ ADMIN -------------------------
 export const readAdminSchema = object({
   params: object({
     id: string(),
   }).strict(),
 });
 
-// ------------------------- READ ADMINS SCHEMA -------------------------
+// ------------------------- SCHEMA -> READ ADMINS -------------------------
 export const readAdminsSchema = object({
   body: object({
     params: object({
@@ -43,8 +45,8 @@ export const readAdminsSchema = object({
   }).strict(),
 });
 
-// ------------------------- UPDATE CURRENT ADMIN NAME SCHEMA -------------------------
-export const updateCurrentAdminNameSchema = object({
+// ------------------------- SCHEMA -> UPDATE CURRENT ADMIN -------------------------
+export const updateCurrentAdminSchema = object({
   body: object({
     data: object({
       lastname: string().optional(),
@@ -54,7 +56,7 @@ export const updateCurrentAdminNameSchema = object({
   }).strict(),
 });
 
-// ------------------------- UPDATE CURRENT ADMIN EMAIL SCHEMA -------------------------
+// ------------------------- SCHEMA -> UPDATE CURRENT ADMIN EMAIL -------------------------
 export const updateCurrentAdminEmailSchema = object({
   body: object({
     data: object({
@@ -63,7 +65,7 @@ export const updateCurrentAdminEmailSchema = object({
   }).strict(),
 });
 
-// ------------------------- UPDATE CURRENT ADMIN PASSWORD SCHEMA -------------------------
+// ------------------------- SCHEMA -> UPDATE CURRENT ADMIN PASSWORD -------------------------
 export const updateCurrentAdminPasswordSchema = object({
   body: object({
     data: object({
@@ -77,7 +79,7 @@ export const updateCurrentAdminPasswordSchema = object({
   }).strict(),
 });
 
-// ------------------------- UPDATE ADMIN ROLE SCHEMA -------------------------
+// ------------------------- SCHEMA -> UPDATE ADMIN ROLE -------------------------
 export const updateAdminRoleSchema = object({
   params: object({
     id: string(),
@@ -89,14 +91,14 @@ export const updateAdminRoleSchema = object({
   }).strict(),
 });
 
-// ------------------------- DISABLE ADMIN SCHEMA -------------------------
+// ------------------------- SCHEMA -> DISABLE ADMIN -------------------------
 export const disableAdminSchema = object({
   params: object({
     id: string(),
   }).strict(),
 });
 
-// ------------------------- DELETE ADMIN SCHEMA -------------------------
+// ------------------------- SCHEMA -> DELETE ADMIN -------------------------
 export const deleteAdminSchema = object({
   params: object({
     id: string(),
@@ -104,11 +106,9 @@ export const deleteAdminSchema = object({
 });
 
 export type CreateAdminInput = TypeOf<typeof createAdminSchema>;
-export type FindAdminInput = TypeOf<typeof readAdminSchema>;
-export type ListAdminsInput = TypeOf<typeof readAdminsSchema>;
-export type UpdateCurrentAdminNameInput = TypeOf<
-  typeof updateCurrentAdminNameSchema
->;
+export type ReadAdminInput = TypeOf<typeof readAdminSchema>;
+export type ReadAdminsInput = TypeOf<typeof readAdminsSchema>;
+export type UpdateCurrentAdminInput = TypeOf<typeof updateCurrentAdminSchema>;
 export type UpdateCurrentAdminEmailInput = TypeOf<
   typeof updateCurrentAdminEmailSchema
 >;

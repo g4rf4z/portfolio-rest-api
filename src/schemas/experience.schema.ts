@@ -1,4 +1,4 @@
-import { date, object, string, TypeOf } from "zod";
+import { object, string, TypeOf } from "zod";
 
 export const createExperienceSchema = object({
   body: object({
@@ -61,7 +61,7 @@ export const deleteExperienceSchema = object({
 });
 
 export type CreateExperienceInput = TypeOf<typeof createExperienceSchema>;
-export type FindExperienceInput = TypeOf<typeof readExperienceSchema>;
-export type ListExperiencesInput = TypeOf<typeof readExperiencesSchema>;
+export type ReadExperienceInput = TypeOf<typeof readExperienceSchema>;
+export type ReadExperiencesInput = TypeOf<typeof readExperiencesSchema>;
 export type UpdateExperienceInput = TypeOf<typeof updateExperienceSchema>;
 export type DeleteExperienceInput = TypeOf<typeof deleteExperienceSchema>;

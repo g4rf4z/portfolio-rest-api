@@ -49,7 +49,7 @@ export const deleteSkillSchema = object({
 });
 
 export type CreateSkillInput = TypeOf<typeof createSkillSchema>;
-export type FindSkillInput = TypeOf<typeof readSkillSchema>;
-export type ListSkillsInput = TypeOf<typeof readSkillsSchema>;
+export type ReadSkillInput = TypeOf<typeof readSkillSchema>;
+export type ReadSkillsInput = TypeOf<typeof readSkillsSchema>;
 export type UpdateSkillInput = TypeOf<typeof updateSkillSchema>;
 export type DeleteSkillInput = TypeOf<typeof deleteSkillSchema>;
