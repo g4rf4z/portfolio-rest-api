@@ -1,9 +1,9 @@
 import config from "config";
 import jwt from "jsonwebtoken";
 
-import { readSession } from "../services/session.service";
-
 import type { Admin, AdminRole, Session } from "@prisma/client";
+
+import { readSession } from "../services/session.service";
 
 const privateKey = config.get<string>("privateKey");
 const publicKey = config.get<string>("publicKey");

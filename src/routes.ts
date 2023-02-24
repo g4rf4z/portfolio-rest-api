@@ -1,12 +1,18 @@
 import { Express } from "express";
-import config from "config";
 
 import { sendEmail } from "./utils/nodemailer";
 
 import { requireAuth } from "./middlewares/requireAuthentication";
 
-import { loginSchema } from "./schemas/authentication.schema";
-import { loginController, logoutController } from "./controllers/authentication.controller";
+import {
+  loginSchema,
+  resetPasswordSchema,
+} from "./schemas/authentication.schema";
+import {
+  loginController,
+  logoutController,
+  resetPasswordController,
+} from "./controllers/authentication.controller";
 
 import { readSessionsSchema } from "./schemas/session.schema";
 import {
@@ -86,12 +92,28 @@ const routes = (app: Express) => {
     [requireAuth, validateInputs(readSessionsSchema)],
     findOwnSessionsController
   );
-  app.delete("/inactive-sessions", [requireAuth], deleteInactiveSessionsController);
+  app.delete(
+    "/inactive-sessions",
+    [requireAuth],
+    deleteInactiveSessionsController
+  );
 
   // ------------------------- ROUTES -> ADMINS -------------------------
-  app.post("/admins", [requireAuth, validateInputs(createAdminSchema)], createAdminController);
-  app.get("/admins/:id", [requireAuth, validateInputs(readAdminSchema)], readAdminController);
-  app.get("/admins", [requireAuth, validateInputs(readAdminsSchema)], readAdminsController);
+  app.post(
+    "/admins",
+    [requireAuth, validateInputs(createAdminSchema)],
+    createAdminController
+  );
+  app.get(
+    "/admins/:id",
+    [requireAuth, validateInputs(readAdminSchema)],
+    readAdminController
+  );
+  app.get(
+    "/admins",
+    [requireAuth, validateInputs(readAdminsSchema)],
+    readAdminsController
+  );
   app.patch(
     "/me",
     [requireAuth, validateInputs(updateCurrentAdminSchema)],
@@ -124,10 +146,22 @@ const routes = (app: Express) => {
   );
 
   // ------------------------- ROUTES -> SKILLS -------------------------
-  app.post("/skills", [requireAuth, validateInputs(createSkillSchema)], createSkillController);
-  app.get("/skills/:id", [validateInputs(readSkillSchema)], readSkillController);
+  app.post(
+    "/skills",
+    [requireAuth, validateInputs(createSkillSchema)],
+    createSkillController
+  );
+  app.get(
+    "/skills/:id",
+    [validateInputs(readSkillSchema)],
+    readSkillController
+  );
   app.get("/skills", [validateInputs(readSkillsSchema)], readSkillsController);
-  app.patch("/skills/:id", [requireAuth, validateInputs(updateSkillSchema)], updateSkillController);
+  app.patch(
+    "/skills/:id",
+    [requireAuth, validateInputs(updateSkillSchema)],
+    updateSkillController
+  );
   app.delete(
     "/skills/:id",
     [requireAuth, validateInputs(deleteSkillSchema)],
@@ -140,8 +174,16 @@ const routes = (app: Express) => {
     [requireAuth, validateInputs(createExperienceSchema)],
     createExperienceController
   );
-  app.get("/experiences/:id", [validateInputs(readExperienceSchema)], readExperienceController);
-  app.get("/experiences", [validateInputs(readExperiencesSchema)], readExperiencesController);
+  app.get(
+    "/experiences/:id",
+    [validateInputs(readExperienceSchema)],
+    readExperienceController
+  );
+  app.get(
+    "/experiences",
+    [validateInputs(readExperiencesSchema)],
+    readExperiencesController
+  );
   app.patch(
     "/experiences/:id",
     [requireAuth, validateInputs(updateExperienceSchema)],
@@ -154,20 +196,26 @@ const routes = (app: Express) => {
   );
 
   // ------------------------- ROUTES -> EMAIL -------------------------
-  app.post("/email", async (req, res) => {
-    const { email } = req.body;
+  // app.post("/email", async (req, res) => {
+  //   const { email } = req.body;
 
-    if (!email) {
-      return res.status(400).send("Email missing");
-    }
+  //   if (!email) {
+  //     return res.status(400).send("Email missing");
+  //   }
 
-    try {
-      await sendEmail(email);
-      res.send("Email sent");
-    } catch (error) {
-      res.status(500).send("Error sending email");
-    }
-  });
+  //   try {
+  //     await sendEmail(email);
+  //     res.send("Email sent");
+  //   } catch (error) {
+  //     res.status(500).send("Error sending email");
+  //   }
+  // });
+
+  app.post(
+    "/reset-password",
+    [requireAuth, validateInputs(resetPasswordSchema)],
+    resetPasswordController
+  );
 };
 
 export default routes;

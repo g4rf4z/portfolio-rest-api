@@ -4,7 +4,14 @@ import nodemailer from "nodemailer";
 const nodemailerEmail = config.get<string>("nodemailerEmail");
 const nodemailerPassword = config.get<string>("nodemailerPassword");
 
-export const sendEmail = async (email: string) => {
+interface EmailData {
+  to: string;
+  subject: string;
+  text: string;
+  html: string;
+}
+
+export const sendEmail = async (data: EmailData) => {
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -13,15 +20,16 @@ export const sendEmail = async (email: string) => {
     },
   });
 
-  const options = {
+  const emailOptions = {
     from: nodemailerEmail,
-    to: `${email}`,
-    subject: "Email sent using NodeJs",
-    text: "Hello World !",
+    to: data.to,
+    subject: data.subject,
+    text: data.text,
+    html: data.html,
   };
 
   try {
-    const info = await transporter.sendMail(options);
+    const info = await transporter.sendMail(emailOptions);
     console.log("Email sent: " + info.response);
   } catch (error) {
     console.error(error);

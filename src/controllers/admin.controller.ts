@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import { checkAdminClearance } from "../utils/checkPermissions";
 import { hashString } from "../utils/hash.utils";
 import { handleError } from "../utils/errors";
+import { sendEmail } from "../utils/nodemailer";
 
 import {
   createAdmin,
@@ -44,7 +45,6 @@ export const createAdminController = async (
       select: {
         id: true,
         createdAt: true,
-        updatedAt: true,
         firstname: true,
         lastname: true,
         nickname: true,
@@ -149,6 +149,16 @@ export const updateCurrentAdminEmailController = async (
       req.body.data,
       updateAdminOptions
     );
+    if (updatedAdmin.email !== res.locals.accound.email) {
+      await sendEmail({
+        to: updatedAdmin.email,
+        subject: "Modification de ton adresse email",
+        text: `Ton adresse email a été mise à jour avec succès. Désormais, ton identifiant de connexion est ${updatedAdmin.email}. Si tu n'es pas à l'origine de cette modification, je t'invites à me contacter immédiatement via le formulaire de contact.`,
+        html: `<p>Ton adresse email a été mise à jour avec succès.<br>
+      Désormais, ton identifiant de connexion est ${updatedAdmin.email}.<br>
+      Si tu n'es pas à l'origine de cette modification, je t'invites à me contacter immédiatement via le formulaire de contact.</p>`,
+      });
+    }
     return res.send(updatedAdmin);
   } catch (error) {
     return handleError(error, res);
@@ -162,15 +172,7 @@ export const updateCurrentAdminPasswordController = async (
   try {
     const updateAdminOptions = {
       select: {
-        id: true,
-        createdAt: true,
-        updatedAt: true,
-        firstname: true,
-        lastname: true,
-        nickname: true,
-        email: true,
-        role: true,
-        isActive: true,
+        password: true,
       },
     };
     const updatedAdmin = await updateAdmin(

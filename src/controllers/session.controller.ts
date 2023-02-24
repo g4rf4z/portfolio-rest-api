@@ -2,11 +2,7 @@ import type { Request, Response } from "express";
 
 import { handleError } from "../utils/errors";
 
-import {
-  readSession,
-  readSessions,
-  deleteSessions,
-} from "../services/session.service";
+import { readSession, readSessions, deleteSessions } from "../services/session.service";
 
 import type { ReadSessionsInput } from "../schemas/session.schema";
 
@@ -64,10 +60,7 @@ export const findOwnSessionsController = async (
   }
 };
 
-export const deleteInactiveSessionsController = async (
-  req: Request,
-  res: Response
-) => {
+export const deleteInactiveSessionsController = async (req: Request, res: Response) => {
   try {
     const deletedInactiveSessions = await deleteSessions({ isActive: false });
     return res.send(deletedInactiveSessions);

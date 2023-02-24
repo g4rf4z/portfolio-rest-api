@@ -3,6 +3,7 @@ import type { Prisma } from "@prisma/client";
 import type { JwtTokenData } from "../utils/jwt.utils";
 
 import crypto from "crypto";
+import { sendEmail } from "../utils/nodemailer";
 
 import { readAdmin, updateAdmin } from "../services/admin.service";
 import { CustomError, handleError } from "../utils/errors";
@@ -161,36 +162,40 @@ export const resetPasswordController = async (
   let tokenSent = {
     message: "Password reset email has been sent (if the account exist)",
   };
+
   try {
     let foundAccount;
 
-    // check if account exist
+    // Checks if account exists.
     const foundAccountParams = { email: req.body.data.email };
     foundAccount = await readAdmin(foundAccountParams);
 
-    // invalidate previous reset password tokens
+    // Invalidates previous reset password tokens.
     await updateResetPasswordTokens(
       { id: foundAccount.id },
       { isValid: false }
     );
 
-    // generate reset password token and save it
+    // Generates reset password token and save it to the database.
     let token = crypto.randomBytes(32).toString("hex");
     const tokenHash = await hashString(token);
     const createTokenData = {
-      expiresAt: new Date(new Date().getTime() + 5 * 60000), // expires in 3 minutes
+      expiresAt: new Date(new Date().getTime() + 5 * 60000), // Expires after 3 minutes.
       token: tokenHash,
       ownerId: foundAccount.id,
     };
     await createResetPasswordToken(createTokenData);
 
-    // send email
-    // await sendEmail({
-    //   to: foundAccount.email,
-    //   subject: "Password Reset - Lille Esport",
-    //   text: "Reset password link",
-    //   html: `<p>Id: ${foundAccount.id}</p><p>ResetPasswordToken: ${token}</p>`,
-    // });
+    await sendEmail({
+      to: foundAccount.email,
+      subject: "Password Reset",
+      text: "Reset password link",
+      html: `<p>Bonjour,</p>
+        <p>Veuillez cliquer sur le lien ci-dessous afin de valider votre nouvelle adresse email:</p>
+        <p>Id: ${foundAccount.id}</p><p>ResetPasswordToken: ${token}</p>
+        <a href="https://votre-domaine.com/validate-email?token=">Je valide ma nouvelle adresse email</a>
+        <p>À bientôt !</p>`,
+    });
 
     return res.status(200).send(tokenSent);
   } catch (error) {

@@ -3,7 +3,6 @@ import type { Prisma } from "@prisma/client";
 import { prisma } from "../utils/prisma";
 import { handlePrismaError } from "../utils/errors";
 
-// CREATE RESET PASSWORD TOKEN
 export const createResetPasswordToken = async (
   data: Prisma.ResetPasswordTokenCreateArgs["data"],
   options: Omit<Prisma.ResetPasswordTokenCreateArgs, "data"> = {}
@@ -15,7 +14,6 @@ export const createResetPasswordToken = async (
   }
 };
 
-// FIND RESET PASSWORD TOKEN
 export const findResetPasswordToken = async (
   params: Prisma.ResetPasswordTokenFindFirstOrThrowArgs["where"],
   options: Omit<Prisma.ResetPasswordTokenFindFirstOrThrowArgs, "where"> = {}
@@ -30,7 +28,6 @@ export const findResetPasswordToken = async (
   }
 };
 
-// UPDATE RESET PASSWORD TOKEN
 export const updateResetPasswordToken = async (
   params: Prisma.ResetPasswordTokenUpdateArgs["where"],
   data: Prisma.ResetPasswordTokenUpdateArgs["data"],
@@ -47,7 +44,6 @@ export const updateResetPasswordToken = async (
   }
 };
 
-// UPDATE RESET PASSWORD TOKENS
 export const updateResetPasswordTokens = async (
   params: Prisma.ResetPasswordTokenUpdateManyArgs["where"],
   data: Prisma.ResetPasswordTokenUpdateManyArgs["data"],
