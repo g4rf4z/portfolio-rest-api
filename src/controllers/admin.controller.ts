@@ -149,7 +149,7 @@ export const updateCurrentAdminEmailController = async (
       req.body.data,
       updateAdminOptions
     );
-    if (updatedAdmin.email !== res.locals.accound.email) {
+    if (updatedAdmin.email !== res.locals.account.email) {
       await sendEmail({
         to: updatedAdmin.email,
         subject: "Modification de ton adresse email",
@@ -180,6 +180,7 @@ export const updateCurrentAdminPasswordController = async (
       req.body.data,
       updateAdminOptions
     );
+    console.log(3);
     return res.send(updatedAdmin);
   } catch (error) {
     return handleError(error, res);
