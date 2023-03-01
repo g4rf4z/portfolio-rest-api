@@ -63,13 +63,12 @@ export const updateCurrentAdminEmailSchema = object({
 export const updateCurrentAdminPasswordSchema = object({
   body: object({
     data: object({
-      password: string(),
-      newPassword: string().min(8),
-      newPasswordConfirmation: string().optional(),
+      password: string().min(8),
+      passwordConfirmation: string().optional(),
     })
       .strict()
-      .refine((data) => validatePasswordComplexity(data.newPassword, 3))
-      .refine((data) => data.newPassword === data.newPasswordConfirmation),
+      .refine((data) => validatePasswordComplexity(data.password, 3))
+      .refine((data) => data.password === data.passwordConfirmation),
   }).strict(),
 });
 

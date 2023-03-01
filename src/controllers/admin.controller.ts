@@ -152,17 +152,16 @@ export const updateCurrentAdminEmailController = async (
     );
     if (updatedAdmin.email !== res.locals.account.email) {
       await sendEmail({
-        to: updatedAdmin.email,
-        subject: "Modification de ton adresse email",
+        to: res.locals.account.email && updatedAdmin.email,
+        subject: "Modification de votre adresse email",
         text: `Bonjour ${updatedAdmin.firstname},
 
         Nous vous informons que votre adresse e-mail a été mise à jour avec succès.
         Veuillez noter que votre nouvelle adresse e-mail ${updatedAdmin.email} est désormais utilisée comme identifiant de connexion.
-        Si vous êtes à l'origine de cette modification, vous n'avez rien à faire.
-        Cependant, si vous n'êtes pas à l'origine de cette modification, veuillez nous contacter immédiatement en utilisant notre formulaire de contact.
+        Si vous n'êtes pas à l'origine de cette modification, veuillez nous contacter immédiatement en utilisant notre formulaire de contact.
         Merci de votre compréhension.
 
-        Cordialement,`,
+        Cordialement.`,
         html: `<p>Bonjour ${updatedAdmin.firstname},<br>
         <br>
         Nous vous informons que votre adresse e-mail a été mise à jour avec succès.<br>
@@ -170,7 +169,7 @@ export const updateCurrentAdminEmailController = async (
         Si vous n'êtes pas à l'origine de cette modification, veuillez nous contacter immédiatement en utilisant notre formulaire de contact.<br>
         Merci de votre compréhension.<br>
         <br>
-        Cordialement,</p>`,
+        Cordialement.</p>`,
       });
     }
     return res.send(updatedAdmin);
@@ -184,19 +183,20 @@ export const updateCurrentAdminPasswordController = async (
   res: Response
 ) => {
   try {
-    console.log("a");
     const updateAdminOptions = {
       select: {
         password: true,
       },
     };
-    console.log("b");
+    // Hashes password.
+    req.body.data.password = await hashString(req.body.data.password);
+    // Deletes password confirmation.
+    delete req.body.data.passwordConfirmation;
     const updatedAdmin = await updateAdmin(
       { id: res.locals.account.id },
       req.body.data,
       updateAdminOptions
     );
-    console.log("c");
     return res.send(updatedAdmin);
   } catch (error) {
     return handleError(error, res);
@@ -223,15 +223,7 @@ export const updateAdminRoleController = async (
 
     const updateAdminOptions = {
       select: {
-        id: true,
-        createdAt: true,
-        updatedAt: true,
-        firstname: true,
-        lastname: true,
-        nickname: true,
-        email: true,
         role: true,
-        isActive: true,
       },
     };
     const updatedAdmin = await updateAdmin(
@@ -254,14 +246,6 @@ export const disableAdminController = async (
 
     const updateAdminOptions = {
       select: {
-        id: true,
-        createdAt: true,
-        updatedAt: true,
-        firstname: true,
-        lastname: true,
-        nickname: true,
-        email: true,
-        role: true,
         isActive: true,
       },
     };
