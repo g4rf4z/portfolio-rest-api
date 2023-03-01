@@ -141,6 +141,7 @@ export const updateCurrentAdminEmailController = async (
   try {
     const updateAdminOptions = {
       select: {
+        firstname: true,
         email: true,
       },
     };
@@ -153,10 +154,23 @@ export const updateCurrentAdminEmailController = async (
       await sendEmail({
         to: updatedAdmin.email,
         subject: "Modification de ton adresse email",
-        text: `Ton adresse email a été mise à jour avec succès. Désormais, ton identifiant de connexion est ${updatedAdmin.email}. Si tu n'es pas à l'origine de cette modification, je t'invites à me contacter immédiatement via le formulaire de contact.`,
-        html: `<p>Ton adresse email a été mise à jour avec succès.<br>
-      Désormais, ton identifiant de connexion est ${updatedAdmin.email}.<br>
-      Si tu n'es pas à l'origine de cette modification, je t'invites à me contacter immédiatement via le formulaire de contact.</p>`,
+        text: `Bonjour ${updatedAdmin.firstname},
+
+        Nous vous informons que votre adresse e-mail a été mise à jour avec succès.
+        Veuillez noter que votre nouvelle adresse e-mail ${updatedAdmin.email} est désormais utilisée comme identifiant de connexion.
+        Si vous êtes à l'origine de cette modification, vous n'avez rien à faire.
+        Cependant, si vous n'êtes pas à l'origine de cette modification, veuillez nous contacter immédiatement en utilisant notre formulaire de contact.
+        Merci de votre compréhension.
+
+        Cordialement,`,
+        html: `<p>Bonjour ${updatedAdmin.firstname},<br>
+        <br>
+        Nous vous informons que votre adresse e-mail a été mise à jour avec succès.<br>
+        Veuillez noter que votre nouvelle adresse e-mail ${updatedAdmin.email} est désormais utilisée comme identifiant de connexion.<br>
+        Si vous n'êtes pas à l'origine de cette modification, veuillez nous contacter immédiatement en utilisant notre formulaire de contact.<br>
+        Merci de votre compréhension.<br>
+        <br>
+        Cordialement,</p>`,
       });
     }
     return res.send(updatedAdmin);
@@ -170,17 +184,19 @@ export const updateCurrentAdminPasswordController = async (
   res: Response
 ) => {
   try {
+    console.log("a");
     const updateAdminOptions = {
       select: {
         password: true,
       },
     };
+    console.log("b");
     const updatedAdmin = await updateAdmin(
       { id: res.locals.account.id },
       req.body.data,
       updateAdminOptions
     );
-    console.log(3);
+    console.log("c");
     return res.send(updatedAdmin);
   } catch (error) {
     return handleError(error, res);
