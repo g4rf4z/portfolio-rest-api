@@ -185,18 +185,18 @@ export const resetPasswordController = async (
       ownerId: foundAccount.id,
     };
     await createResetPasswordToken(createTokenData);
-
     await sendEmail({
       to: foundAccount.email,
-      subject: "Password Reset",
-      text: "Reset password link",
-      html: `<p>Bonjour,</p>
-        <p>Veuillez cliquer sur le lien ci-dessous afin de valider votre nouvelle adresse email:</p>
-        <p>Id: ${foundAccount.id}</p><p>ResetPasswordToken: ${token}</p>
-        <a href="https://votre-domaine.com/validate-email?token=">Je valide ma nouvelle adresse email</a>
-        <p>À bientôt !</p>`,
-    });
+      subject: "Réinitialisation de votre mot de passe",
+      text: `Bonjour,
 
+      Veuillez cliquer sur le lien ci-dessous afin de réinitialiser votre mot de passe :
+      <a href="https://votre-domaine.com/reset-password?${foundAccount.id}/${token}=">Réinitialiser mon mot de passe</a>`,
+      html: `<p>Bonjour,<br>
+      <br>
+      Veuillez cliquer sur le lien ci-dessous afin de réinitialiser votre mot de passe :<br>
+      <a href="https://votre-domaine.com/reset-password?${foundAccount.id}/${token}=">Réinitialiser mon mot de passe</a></p>`,
+    });
     return res.status(200).send(tokenSent);
   } catch (error) {
     if (error instanceof CustomError && error.message === "not_found") {

@@ -197,6 +197,7 @@ export const updateCurrentAdminPasswordController = async (
     }
     const updateAdminOptions = {
       select: {
+        firstname: true,
         password: true,
       },
     };
@@ -207,6 +208,22 @@ export const updateCurrentAdminPasswordController = async (
       { password: hashedNewPassword },
       updateAdminOptions
     );
+    await sendEmail({
+      to: res.locals.account.email,
+      subject: "Modification de votre mot de passe",
+      text: `Bonjour ${updatedAdmin.firstname},
+
+        Nous vous informons que votre mot de passe a été modifié avec succès.
+        Si vous n'êtes pas à l'origine de cette modification, veuillez nous contacter immédiatement en utilisant notre formulaire de contact.
+
+        À bientôt.`,
+      html: `<p>Bonjour ${updatedAdmin.firstname},<br>
+        <br>
+        Nous vous informons que votre mot de passe a été modifié avec succès.<br>
+        Si vous n'êtes pas à l'origine de cette modification, veuillez nous contacter immédiatement en utilisant notre formulaire de contact.<br>
+        <br>
+        À bientôt.</p>`,
+    });
     return res.send(updatedAdmin);
   } catch (error) {
     return handleError(error, res);
