@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
 import { checkAdminClearance } from "../utils/checkPermissions";
-import { hashString } from "../utils/hash.utils";
+import { compareData, hashString } from "../utils/hash.utils";
 import { handleError } from "../utils/errors";
 import { sendEmail } from "../utils/nodemailer";
 
@@ -183,18 +183,28 @@ export const updateCurrentAdminPasswordController = async (
   res: Response
 ) => {
   try {
+    const findOwner = { id: res.locals.account.id };
+    const foundOwner = await readAdmin(findOwner);
+    const passwordsMatch = await compareData(
+      foundOwner.password,
+      req.body.data.password
+    );
+
+    if (!passwordsMatch) {
+      return res.status(400).send({
+        message: "An error has occurred",
+      });
+    }
     const updateAdminOptions = {
       select: {
         password: true,
       },
     };
-    // Hashes password.
-    req.body.data.password = await hashString(req.body.data.password);
-    // Deletes password confirmation.
-    delete req.body.data.passwordConfirmation;
+    const hashedNewPassword = await hashString(req.body.data.newPassword);
+    delete req.body.data.newPasswordConfirmation;
     const updatedAdmin = await updateAdmin(
       { id: res.locals.account.id },
-      req.body.data,
+      { password: hashedNewPassword },
       updateAdminOptions
     );
     return res.send(updatedAdmin);
