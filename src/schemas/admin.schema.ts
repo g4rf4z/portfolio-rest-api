@@ -68,6 +68,7 @@ export const updateCurrentAdminPasswordSchema = object({
       newPasswordConfirmation: string().optional(),
     })
       .strict()
+      .refine((data) => data.password !== data.newPassword)
       .refine((data) => validatePasswordComplexity(data.newPassword, 3))
       .refine((data) => data.newPassword === data.newPasswordConfirmation),
   }).strict(),

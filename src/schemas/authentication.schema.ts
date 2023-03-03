@@ -1,8 +1,6 @@
-import { object, string, enum as zodEnum, TypeOf } from "zod";
+import { object, string, TypeOf } from "zod";
 
 import { validatePasswordComplexity } from "../utils/customValidators";
-
-const TYPE_VALUES = ["admin", "user"] as const;
 
 export const loginSchema = object({
   body: object({
@@ -14,9 +12,6 @@ export const loginSchema = object({
 });
 
 export const resetPasswordSchema = object({
-  params: object({
-    type: zodEnum(TYPE_VALUES),
-  }).strict(),
   body: object({
     data: object({
       email: string().email(),
@@ -26,7 +21,6 @@ export const resetPasswordSchema = object({
 
 export const setPasswordSchema = object({
   params: object({
-    type: zodEnum(TYPE_VALUES),
     id: string(),
     token: string(),
   }).strict(),

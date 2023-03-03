@@ -3,6 +3,7 @@ import type { Prisma } from "@prisma/client";
 import type { JwtTokenData } from "../utils/jwt.utils";
 
 import crypto from "crypto";
+import { sendEmail } from "../utils/nodemailer";
 
 import { readAdmin, updateAdmin } from "../services/admin.service";
 import { CustomError, handleError } from "../utils/errors";
@@ -161,37 +162,41 @@ export const resetPasswordController = async (
   let tokenSent = {
     message: "Password reset email has been sent (if the account exist)",
   };
+
   try {
     let foundAccount;
 
-    // check if account exist
+    // Checks if account exists.
     const foundAccountParams = { email: req.body.data.email };
     foundAccount = await readAdmin(foundAccountParams);
 
-    // invalidate previous reset password tokens
+    // Invalidates previous reset password tokens.
     await updateResetPasswordTokens(
       { id: foundAccount.id },
       { isValid: false }
     );
 
-    // generate reset password token and save it
+    // Generates reset password token and save it to the database.
     let token = crypto.randomBytes(32).toString("hex");
     const tokenHash = await hashString(token);
     const createTokenData = {
-      expiresAt: new Date(new Date().getTime() + 5 * 60000), // expires in 3 minutes
+      expiresAt: new Date(new Date().getTime() + 5 * 60000), // Expires after 3 minutes.
       token: tokenHash,
       ownerId: foundAccount.id,
     };
     await createResetPasswordToken(createTokenData);
+    await sendEmail({
+      to: foundAccount.email,
+      subject: "Réinitialisation de votre mot de passe",
+      text: `Bonjour,
 
-    // send email
-    // await sendEmail({
-    //   to: foundAccount.email,
-    //   subject: "Password Reset - Lille Esport",
-    //   text: "Reset password link",
-    //   html: `<p>Id: ${foundAccount.id}</p><p>ResetPasswordToken: ${token}</p>`,
-    // });
-
+      Veuillez cliquer sur le lien ci-dessous afin de réinitialiser votre mot de passe :
+      <a href="https://votre-domaine.com/reset-password?${foundAccount.id}/${token}=">Réinitialiser mon mot de passe</a>`,
+      html: `<p>Bonjour,<br>
+      <br>
+      Veuillez cliquer sur le lien ci-dessous afin de réinitialiser votre mot de passe :<br>
+      <a href="https://votre-domaine.com/reset-password?${foundAccount.id}/${token}=">Réinitialiser mon mot de passe</a></p>`,
+    });
     return res.status(200).send(tokenSent);
   } catch (error) {
     if (error instanceof CustomError && error.message === "not_found") {

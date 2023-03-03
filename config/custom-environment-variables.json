@@ -5,5 +5,7 @@
     "environment": "NODE_ENV",
     "publicKey": "PUBLIC_KEY",
     "privateKey": "PRIVATE_KEY",
-    "port": "PORT"
+    "port": "PORT",
+    "nodemailerEmail": "NODEMAILER_EMAIL",
+    "nodemailerPassword": "NODEMAILER_PASSWORD"
 }

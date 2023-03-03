@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
 
 import { checkAdminClearance } from "../utils/checkPermissions";
-import { hashString } from "../utils/hash.utils";
+import { compareData, hashString } from "../utils/hash.utils";
 import { handleError } from "../utils/errors";
+import { sendEmail } from "../utils/nodemailer";
 
 import {
   createAdmin,
@@ -44,7 +45,6 @@ export const createAdminController = async (
       select: {
         id: true,
         createdAt: true,
-        updatedAt: true,
         firstname: true,
         lastname: true,
         nickname: true,
@@ -141,6 +141,7 @@ export const updateCurrentAdminEmailController = async (
   try {
     const updateAdminOptions = {
       select: {
+        firstname: true,
         email: true,
       },
     };
@@ -149,6 +150,28 @@ export const updateCurrentAdminEmailController = async (
       req.body.data,
       updateAdminOptions
     );
+    if (updatedAdmin.email !== res.locals.account.email) {
+      await sendEmail({
+        to: res.locals.account.email && updatedAdmin.email,
+        subject: "Modification de votre adresse email",
+        text: `Bonjour ${updatedAdmin.firstname},
+
+        Nous vous informons que votre adresse e-mail a été mise à jour avec succès.
+        Veuillez noter que votre nouvelle adresse e-mail ${updatedAdmin.email} est désormais utilisée comme identifiant de connexion.
+        Si vous n'êtes pas à l'origine de cette modification, veuillez nous contacter immédiatement en utilisant notre formulaire de contact.
+        Merci de votre compréhension.
+
+        Cordialement.`,
+        html: `<p>Bonjour ${updatedAdmin.firstname},<br>
+        <br>
+        Nous vous informons que votre adresse e-mail a été mise à jour avec succès.<br>
+        Veuillez noter que votre nouvelle adresse e-mail ${updatedAdmin.email} est désormais utilisée comme identifiant de connexion.<br>
+        Si vous n'êtes pas à l'origine de cette modification, veuillez nous contacter immédiatement en utilisant notre formulaire de contact.<br>
+        Merci de votre compréhension.<br>
+        <br>
+        Cordialement.</p>`,
+      });
+    }
     return res.send(updatedAdmin);
   } catch (error) {
     return handleError(error, res);
@@ -160,24 +183,47 @@ export const updateCurrentAdminPasswordController = async (
   res: Response
 ) => {
   try {
+    const findOwner = { id: res.locals.account.id };
+    const foundOwner = await readAdmin(findOwner);
+    const passwordsMatch = await compareData(
+      foundOwner.password,
+      req.body.data.password
+    );
+
+    if (!passwordsMatch) {
+      return res.status(400).send({
+        message: "An error has occurred",
+      });
+    }
     const updateAdminOptions = {
       select: {
-        id: true,
-        createdAt: true,
-        updatedAt: true,
         firstname: true,
-        lastname: true,
-        nickname: true,
-        email: true,
-        role: true,
-        isActive: true,
+        password: true,
       },
     };
+    const hashedNewPassword = await hashString(req.body.data.newPassword);
+    delete req.body.data.newPasswordConfirmation;
     const updatedAdmin = await updateAdmin(
       { id: res.locals.account.id },
-      req.body.data,
+      { password: hashedNewPassword },
       updateAdminOptions
     );
+    await sendEmail({
+      to: res.locals.account.email,
+      subject: "Modification de votre mot de passe",
+      text: `Bonjour ${updatedAdmin.firstname},
+
+        Nous vous informons que votre mot de passe a été modifié avec succès.
+        Si vous n'êtes pas à l'origine de cette modification, veuillez nous contacter immédiatement en utilisant notre formulaire de contact.
+
+        À bientôt.`,
+      html: `<p>Bonjour ${updatedAdmin.firstname},<br>
+        <br>
+        Nous vous informons que votre mot de passe a été modifié avec succès.<br>
+        Si vous n'êtes pas à l'origine de cette modification, veuillez nous contacter immédiatement en utilisant notre formulaire de contact.<br>
+        <br>
+        À bientôt.</p>`,
+    });
     return res.send(updatedAdmin);
   } catch (error) {
     return handleError(error, res);
@@ -204,15 +250,7 @@ export const updateAdminRoleController = async (
 
     const updateAdminOptions = {
       select: {
-        id: true,
-        createdAt: true,
-        updatedAt: true,
-        firstname: true,
-        lastname: true,
-        nickname: true,
-        email: true,
         role: true,
-        isActive: true,
       },
     };
     const updatedAdmin = await updateAdmin(
@@ -235,14 +273,6 @@ export const disableAdminController = async (
 
     const updateAdminOptions = {
       select: {
-        id: true,
-        createdAt: true,
-        updatedAt: true,
-        firstname: true,
-        lastname: true,
-        nickname: true,
-        email: true,
-        role: true,
         isActive: true,
       },
     };

@@ -1,11 +1,19 @@
 import { Express } from "express";
 
+import { sendEmail } from "./utils/nodemailer";
+
 import { requireAuth } from "./middlewares/requireAuthentication";
 
-import { loginSchema } from "./schemas/authentication.schema";
+import {
+  loginSchema,
+  resetPasswordSchema,
+  setPasswordSchema,
+} from "./schemas/authentication.schema";
 import {
   loginController,
   logoutController,
+  resetPasswordController,
+  setNewPasswordController,
 } from "./controllers/authentication.controller";
 
 import { readSessionsSchema } from "./schemas/session.schema";
@@ -74,6 +82,16 @@ const routes = (app: Express) => {
   // ------------------------- ROUTES -> AUTHENTICATION -------------------------
   app.post("/login", [validateInputs(loginSchema)], loginController);
   app.post("/logout", requireAuth, logoutController);
+  app.post(
+    "/reset-password",
+    [requireAuth, validateInputs(resetPasswordSchema)],
+    resetPasswordController
+  );
+  app.post(
+    "/set-password/:id/:token",
+    [requireAuth, validateInputs(setPasswordSchema)],
+    setNewPasswordController
+  );
 
   // ------------------------- ROUTES -> SESSIONS -------------------------
   app.get(

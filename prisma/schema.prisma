@@ -80,7 +80,7 @@ model Experience {
   country  String
   from     DateTime
   to       DateTime
-  tasks    String[]
+  tasks    String
 
   @@map("experiences")
 }
